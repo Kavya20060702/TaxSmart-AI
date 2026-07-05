@@ -1,473 +1,271 @@
-# 🚀 Startup Business Copilot
+# TaxSmart AI 💰🇮🇳
 
-### AI-Powered Multi-Agent Business Intelligence Platform
+> An AI-powered Indian Tax & Financial Literacy Assistant built on IBM Cloud
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)
-![Google Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?logo=google)
-![ChromaDB](https://img.shields.io/badge/RAG-ChromaDB-red)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
-Startup Business Copilot is an **AI-powered business intelligence platform** that helps **founders, investors, incubators, and business analysts** evaluate startups through a collaborative **multi-agent AI workflow**.
-
-By combining **specialized AI agents**, **Google Gemini**, **Retrieval-Augmented Generation (RAG)** with **ChromaDB**, **real-time market intelligence**, and **automated executive reporting**, the platform generates comprehensive startup analyses and strategic recommendations within minutes.
+[![IBM Cloud](https://img.shields.io/badge/IBM%20Cloud-Powered-blue?logo=ibm)](https://cloud.ibm.com)
+[![watsonx.ai](https://img.shields.io/badge/watsonx.ai-Granite-purple)](https://www.ibm.com/watsonx)
+[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://react.dev)
+[![Flask](https://img.shields.io/badge/Backend-Flask-black?logo=flask)](https://flask.palletsprojects.com)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 ---
 
-# 🎯 Problem Statement
+## 📌 Problem Statement
 
-Evaluating a startup requires expertise across multiple domains including:
+**PS #7 — AI Agent for Digital Financial Literacy**
+IBM SkillsBuild University Engagements — AICTE 2026
 
-- Business Strategy
-- Financial Planning
-- Market Research
-- Competitor Analysis
-- Investment Due Diligence
-
-Traditional evaluation is often **time-consuming**, **expensive**, and requires multiple specialists.
-
-**Startup Business Copilot** streamlines this workflow by orchestrating multiple AI agents that collaborate to generate actionable business insights and professional reports.
+> Build a RAG-based AI agent that helps users understand and navigate essential financial tools, tax practices, UPI, online scam awareness, and personal finance management — with multilingual support.
 
 ---
 
-# ✨ Features
+## 🎯 What is TaxSmart AI?
 
-- 🤖 Multi-Agent AI Architecture
-- 💼 Business Analyst Agent
-- 💰 Financial Analyst Agent
-- 📈 Competitor Intelligence Agent
-- 💬 Interactive AI Chat Copilot
-- 🧠 Retrieval-Augmented Generation (RAG)
-- 📚 ChromaDB Vector Memory
-- 🌐 Real-Time Market Intelligence
-- 📄 Executive PDF Report Generator
-- 📁 PDF & CSV Document Processing
-- 📊 Interactive Dashboard
-- ⚡ FastAPI REST API
-- 🎨 Responsive Modern UI
+TaxSmart AI is a full-stack AI-powered tax and financial literacy assistant that helps Indian citizens:
+
+- 💬 Ask any income tax or personal finance question in **English or Hindi**
+- 🧮 Calculate their **Old vs New tax regime** and find out which saves more
+- 📅 Track **ITR filing deadlines** on a visual calendar
+- 📁 Upload and **AI-scan tax documents** stored securely on IBM Cloud
+- 📚 Download official **tax forms** with **IBM Granite AI fill guides**
+- 🎤 Ask questions using **voice input** (mic)
+- 🔍 Get **keyword-aware answers** powered by Watson NLU + RAG
 
 ---
 
-# 🌟 Why This Project Stands Out
+## 🏗️ Architecture
 
-Unlike traditional AI assistants that rely on a single prompt-response workflow, **Startup Business Copilot** distributes responsibilities across specialized AI agents.
-
-Each agent focuses on a specific business domain, resulting in:
-
-- Better reasoning
-- More structured analysis
-- Context-aware recommendations
-- Higher quality reports
-
----
-
-# 🔥 Key Highlights
-
-### 🤖 Multi-Agent Collaboration
-
-Specialized AI agents work together:
-
-- Business Analyst
-- Financial Analyst
-- Competitor Intelligence
-- AI Chat Assistant
-
-Each contributes domain-specific expertise through an orchestration layer.
-
----
-
-### 🧠 Retrieval-Augmented Generation (RAG)
-
-Previous startup evaluations are stored inside **ChromaDB**.
-
-The system retrieves similar startups to provide:
-
-- Historical comparisons
-- Semantic search
-- Context-aware recommendations
-
----
-
-### 📊 Business Intelligence
-
-Automatically evaluates:
-
-- Business Model
-- Value Proposition
-- Product-Market Fit
-- Revenue Model
-- Pricing Strategy
-- Financial Health
-- Risks
-- Investment Potential
-
----
-
-### 🌐 Real-Time Market Intelligence
-
-Enriches startup analysis using live market information including:
-
-- Competitor discovery
-- Industry trends
-- SWOT analysis
-- Market positioning
-
----
-
-### 📄 Executive Reports
-
-Generates professional PDF reports containing:
-
-- Executive Summary
-- Business Analysis
-- Financial Review
-- Competitor Analysis
-- Investment Score
-- Strategic Recommendations
-
----
-
-### 💬 AI Chat Copilot
-
-Continue interacting after analysis.
-
-Example:
-
-> What are the biggest financial risks?
-
-> Which competitors should this startup worry about?
-
-> How can this business improve its pricing strategy?
-
----
-
-### ⚡ Full Stack Architecture
-
-Built using:
-
-- FastAPI Backend
-- Responsive Frontend
-- Modular AI Architecture
-- REST APIs
-
-Designed for scalability and maintainability.
-
----
-
-# 🏢 Real-World Applications
-
-- 🚀 Startup Evaluation
-- 💼 Venture Capital Screening
-- 📈 Investment Research
-- 📊 Business Consulting
-- 🏦 Due Diligence
-- 📚 Entrepreneurship Education
-- 💡 Founder Decision Support
-
----
-
-# 🏗️ System Architecture
-
-> **Architecture Diagram**
-
-<img width="1181" height="912" alt="Image" src="https://github.com/user-attachments/assets/805f96d2-1f00-4e4c-aba0-4f3092013556" />
-
----
-
-# 🔄 Workflow
-
-```text
-                 User
-                   │
-                   ▼
-      Upload Startup Details / PDF / CSV
-                   │
-                   ▼
-       Business Analyst Agent
-                   │
-                   ▼
-      Financial Analyst Agent
-                   │
-                   ▼
-  Competitor Intelligence Agent
-                   │
-                   ▼
-       ChromaDB Vector Memory
-                   │
-                   ▼
-     Executive PDF Report Generator
-                   │
-                   ▼
- Interactive Dashboard & AI Chat
+```
+┌─────────────────────────────────────────────────────┐
+│                   React Frontend                     │
+│  AI Chat │ Tax Calculator │ Calendar │ Form Vault    │
+└──────────────────────┬──────────────────────────────┘
+                       │ HTTP
+┌──────────────────────▼──────────────────────────────┐
+│                 Flask Backend (Python)               │
+│                                                      │
+│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐  │
+│  │ Watson NLU  │  │  ChromaDB    │  │  PyMuPDF   │  │
+│  │  Keywords   │  │  RAG Search  │  │ PDF Parser │  │
+│  └──────┬──────┘  └──────┬───────┘  └─────┬──────┘  │
+│         └────────────────▼────────────────┘          │
+│                  ┌──────────────┐                     │
+│                  │ watsonx.ai   │                     │
+│                  │   Granite    │                     │
+│                  └──────────────┘                     │
+│                  ┌──────────────┐                     │
+│                  │  IBM Cloud   │                     │
+│                  │Object Storage│                     │
+│                  └──────────────┘                     │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-# 🤖 AI Agents
+## ☁️ IBM Cloud Services Used
 
-## 💼 Business Analyst Agent
-
-Analyzes:
-
-- Business Model
-- Value Proposition
-- Product-Market Fit
-- Growth Opportunities
-- Risks
-- Strategic Recommendations
+| # | Service | Purpose |
+|---|---------|---------|
+| 1 | **watsonx.ai (Foundation Models)** | Core LLM for chat, document scanning, form guides, Hindi responses |
+| 2 | **Watson Machine Learning** | Serves the foundation model inference endpoint |
+| 3 | **Watson Natural Language Understanding** | Extracts keywords from user queries to enhance RAG retrieval |
+| 4 | **Watson Assistant** | Conversational AI service integration |
+| 5 | **IBM Cloud Object Storage** | Secure storage for all uploaded tax documents |
 
 ---
 
-## 💰 Financial Analyst Agent
+## ✨ Features
 
-Evaluates:
+### 💬 AI Tax Chat
+- Ask any question about Indian income tax, UPI, scams, budgeting
+- Powered by **RAG pipeline** — answers grounded in 15-document knowledge base
+- **Watson NLU** extracts keywords to improve search accuracy
+- Shows NLU-detected keywords with every response
+- Suggested questions for quick start
 
-- Revenue Streams
-- Burn Rate
-- Unit Economics
-- Pricing Strategy
-- Financial Sustainability
-- Funding Readiness
+### 🎤 Voice Input
+- Click mic button and speak your question
+- Works in **English (en-IN)** and **Hindi (hi-IN)**
+- Uses browser Web Speech API
+
+### 🌐 Bilingual Support
+- Toggle between **English** and **Hindi** (हि)
+- Granite LLM responds in the selected language
+
+### 🧮 Tax Calculator
+- Enter gross income + deductions (80C, 80D, home loan interest)
+- Instantly compares **Old Regime vs New Regime**
+- Shows taxable income, income tax, 4% cess, total tax
+- Highlights the better regime with savings amount
+- Applies rebate under Section 87A automatically
+
+### 📅 Deadline Calendar
+- Full interactive calendar (navigate months)
+- ITR filing deadlines highlighted on actual dates
+- Today highlighted in blue
+- Urgent deadlines in yellow with URGENT badge
+- Deadline list below calendar for current month
+
+### 🗄️ Smart Form Vault
+**Forms Library:**
+- 6 common tax forms (ITR-1, ITR-2, Form 16, 26AS, 15G/H, 12BB)
+- Official download links to Income Tax Portal
+- **IBM Granite AI Guide** — step-by-step instructions to fill each form
+
+**My Documents:**
+- Drag & drop or click to upload PDFs/images
+- Files stored on **IBM Cloud Object Storage**
+- **Auto-scan on upload** — Granite AI extracts key tax info from PDFs
+- **Manual Scan** button — AI analysis of any document
+- **Completeness Check** — AI verifies if required fields are present
+- Smart auto-tagging (Form 16, ITR, HRA, 80C etc.)
+- Delete documents
+
+### 📚 Knowledge Base (RAG)
+15 documents covering:
+- Section 80C, 80D, 80CCD(1B), Section 24B
+- Old vs New tax regime comparison (FY 2024-25)
+- HRA calculation rules
+- Capital gains tax (STCG, LTCG)
+- TDS and Form 16 guidance
+- Income tax slabs FY 2024-25 + 87A rebate
+- Standard deduction (old vs new regime)
+- UPI payments guide
+- Online scam awareness + how to report
+- Personal budgeting (50-30-20 rule)
+- Interest rates (savings, FD, home loan, personal loan)
+- Digital banking safety tips
 
 ---
 
-## 📈 Competitor Intelligence Agent
+## 🛠️ Tech Stack
 
-Performs:
-
-- Competitor Discovery
-- SWOT Analysis
-- Market Positioning
-- Competitive Moat Evaluation
-- Industry Benchmarking
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React (functional components, hooks, inline styles) |
+| Backend | Python 3.13, Flask, Flask-CORS |
+| LLM | IBM watsonx.ai — `mistralai/mistral-small-3-1-24b-instruct-2503` |
+| NLP | IBM Watson Natural Language Understanding |
+| RAG | ChromaDB (local vector store) + sentence-transformers |
+| PDF | PyMuPDF (fitz) |
+| Storage | IBM Cloud Object Storage (`ibm-cos-sdk`) |
+| Voice | Browser Web Speech API |
+| Auth | IBM IAM API Key |
 
 ---
 
-## 💬 AI Chat Copilot
+## 📁 Project Structure
 
-Allows users to ask follow-up questions after completing the analysis.
-
-Example:
-
-```text
-"What are the startup's biggest risks?"
-
-"How can revenue be improved?"
-
-"Compare this startup with its competitors."
 ```
-
----
-
-# 🧠 Vector Memory (RAG)
-
-The platform stores previous startup evaluations using **ChromaDB**.
-
-Capabilities include:
-
-- Semantic Search
-- Similar Startup Retrieval
-- Historical Comparisons
-- Context-Aware Recommendations
-
----
-
-# 📄 Executive Reports
-
-Automatically generates comprehensive PDF reports containing:
-
-- Executive Summary
-- Startup Overview
-- Business Model Analysis
-- Financial Assessment
-- Competitor Analysis
-- SWOT Analysis
-- Investment Score
-- Risk Assessment
-- Strategic Recommendations
-
----
-
-# 🚀 Technology Stack
-
-## Backend
-
-- Python
-- FastAPI
-- Google Gemini API
-- ChromaDB
-- ReportLab
-- Pandas
-
----
-
-## Frontend
-
-- HTML
-- CSS
-- JavaScript
-
----
-
-## AI Technologies
-
-- Multi-Agent Architecture
-- Retrieval-Augmented Generation (RAG)
-- Semantic Vector Search
-- Real-Time Web Search
-- Google Gemini
-
----
-
-# 🌐 REST API
-
-| Endpoint | Description |
-|----------|-------------|
-| GET / | API Status |
-| POST /api/v1/analyze | Analyze Startup |
-| POST /api/v1/dossier | Multi-Agent Evaluation |
-| POST /api/v1/dossier/pdf | Generate Executive Report |
-| GET /api/v1/memory/similar | Retrieve Similar Startups |
-
----
-
-# 📁 Project Structure
-
-```text
-startup-business-copilot/
-│
+taxsmart-ai/
 ├── backend/
-│   ├── agents/
-│   ├── api/
-│   ├── memory/
-│   ├── reports/
-│   ├── skills/
-│   ├── tools/
-│   ├── uploads/
-│   ├── config.py
-│   ├── main.py
+│   ├── app.py              # Flask API (5 endpoints)
+│   ├── knowledge_base.py   # ChromaDB RAG (15 documents)
+│   ├── .env                # IBM credentials (not committed)
 │   └── requirements.txt
-│
 ├── frontend/
-│
-├── docs/
-│   └── architecture.png
-│
-├── screenshots/
-│
-├── README.md
-├── LICENSE
-└── .gitignore
+│   ├── src/
+│   │   ├── App.js          # Main app (chat, toolkit, form vault)
+│   │   ├── TaxCalculator.js
+│   │   └── FormVault.js
+│   └── package.json
+└── README.md
 ```
 
 ---
 
-# 📸 Screenshots
+## 🚀 Setup & Installation
 
-> Place screenshots inside the **screenshots/** directory.
+### Prerequisites
+- Python 3.9+
+- Node.js 18+
+- IBM Cloud account (Lite/Free tier)
 
-Suggested screenshots:
+### IBM Services Required
+Create these on [cloud.ibm.com](https://cloud.ibm.com) (all free Lite tier):
+1. watsonx.ai Studio + Watson Machine Learning
+2. Watson Natural Language Understanding
+3. Watson Assistant
+4. Cloud Object Storage (create a bucket named `taxsmart-documents`)
 
-- 🖥️ Dashboard
-- 📊 Startup Analysis
-- 💬 AI Chat
-- 📄 Executive PDF Report
-- 🧠 Vector Memory Search
-
-Example:
-
-```markdown
-![Dashboard](screenshots/dashboard.png)
-
-![Analysis](screenshots/analysis.png)
-
-![Chat](screenshots/chat.png)
-```
-
----
-
-# 🚀 Installation
+### Backend Setup
 
 ```bash
-# Clone Repository
-git clone https://github.com/Kavya20060702/startup-business-copilot.git
-
-# Navigate
-cd startup-business-copilot
-
-# Backend
 cd backend
-
-# Create Virtual Environment
 python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # Mac/Linux
 
-# Activate (Windows)
-venv\Scripts\activate
+pip install flask flask-cors ibm-watsonx-ai chromadb \
+    sentence-transformers python-dotenv ibm-watson \
+    ibm-cos-sdk pymupdf
+```
 
-# Activate (Linux/macOS)
-source venv/bin/activate
+Create `backend/.env`:
+```env
+IBM_API_KEY=your_watsonx_api_key
+IBM_PROJECT_ID=your_project_id
+IBM_URL=https://us-south.ml.cloud.ibm.com
+NLU_API_KEY=your_nlu_api_key
+NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/YOUR_INSTANCE_ID
+COS_API_KEY=your_cos_api_key
+COS_INSTANCE_ID=crn:v1:bluemix:public:cloud-object-storage:...
+COS_ENDPOINT=https://s3.us-south.cloud-object-storage.appdomain.cloud
+COS_BUCKET=taxsmart-documents
+```
 
-# Install Dependencies
-pip install -r requirements.txt
+Run backend:
+```bash
+python app.py
+# → Running on http://127.0.0.1:5000
+```
 
-# Start Server
-uvicorn main:app --reload
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+# → Running on http://localhost:3000
 ```
 
 ---
 
-# 🎯 Future Improvements
+## 🔌 API Endpoints
 
-- Google ADK Integration
-- MCP Server Support
-- Cloud Deployment
-- Docker Support
-- Kubernetes Deployment
-- Authentication & User Accounts
-- Multi-Language Support
-- Investor CRM Integration
-- Startup Recommendation Engine
-- Advanced Business Analytics
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/chat` | AI chat with RAG + NLU |
+| GET | `/health` | Health check + service status |
+| POST | `/upload` | Upload document to IBM COS + auto-scan |
+| GET | `/documents` | List all documents from IBM COS |
+| DELETE | `/documents/<key>` | Delete document from IBM COS |
+| POST | `/scan` | AI scan/completeness check on document |
 
 ---
 
-# 🏆 Project Highlights
+## 📸 Screenshots
 
-- 🤖 Multi-Agent AI Workflow
-- 🧠 ChromaDB Vector Memory
-- 🌐 Real-Time Market Intelligence
-- 📄 Automated Executive Reports
-- 📊 Interactive Dashboard
-- 💬 AI Chat Assistant
-- ⚡ FastAPI Backend
-- 🎨 Modern Responsive UI
-- 📚 Retrieval-Augmented Generation
-- 🏢 Business Intelligence Platform
+| AI Chat | Tax Calculator | Form Vault |
+|---------|---------------|------------|
+| RAG-powered Q&A with NLU keywords | Old vs New regime comparison | Forms library + My Documents |
 
 ---
 
-# 🙏 Acknowledgements
+## 🙋 Author
 
-Developed as part of the **Kaggle AI Agents: Intensive Vibe Coding Capstone Project with Google**.
-
-This project demonstrates practical applications of:
-
-- Multi-Agent AI Systems
-- Business Intelligence
-- Retrieval-Augmented Generation (RAG)
-- Workflow Orchestration
-- AI-Powered Decision Support
+**Kavya Sai**
+B.Tech CSE (NLP Specialization) — KL University, Hyderabad
+IBM SkillsBuild Virtual Internship — AICTE 2026
 
 ---
 
-# 📄 License
+## ⚠️ Disclaimer
 
-This project is licensed under the **MIT License**.
+TaxSmart AI provides general tax and financial information for educational purposes only. It is not a substitute for professional tax or financial advice. Always verify important financial decisions with a qualified professional.
 
 ---
 
-## ⭐ Support
+## 📄 License
 
-If you found this project useful, consider giving it a **⭐ Star** on GitHub!
-
-Contributions, issues, and feature requests are always welcome.
+This project is licensed under the MIT License.
