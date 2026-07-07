@@ -1,140 +1,157 @@
-# TaxSmart AI 💰🇮🇳
+# TaxSmart AI 💰
 
-> An AI-powered Indian Tax & Financial Literacy Assistant built on IBM Cloud
+> **IBM SkillsBuild AICTE 2026 — Problem Statement #7**
+> AI Agent for Digital Financial Literacy
 
-[![IBM Cloud](https://img.shields.io/badge/IBM%20Cloud-Powered-blue?logo=ibm)](https://cloud.ibm.com)
-[![watsonx.ai](https://img.shields.io/badge/watsonx.ai-Granite-purple)](https://www.ibm.com/watsonx)
-[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)](https://react.dev)
-[![Flask](https://img.shields.io/badge/Backend-Flask-black?logo=flask)](https://flask.palletsprojects.com)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+<div align="center">
 
----
+![IBM Cloud](https://img.shields.io/badge/IBM%20Cloud-Powered-054ADA?style=for-the-badge&logo=ibm)
+![watsonx.ai](https://img.shields.io/badge/watsonx.ai-Granite-8A3FFC?style=for-the-badge)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react)
+![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python)
 
-## 📌 Problem Statement
-
-**PS #7 — AI Agent for Digital Financial Literacy**
-IBM SkillsBuild University Engagements — AICTE 2026
-
-> Build a RAG-based AI agent that helps users understand and navigate essential financial tools, tax practices, UPI, online scam awareness, and personal finance management — with multilingual support.
+</div>
 
 ---
 
-## 🎯 What is TaxSmart AI?
+## 📌 Overview
 
-TaxSmart AI is a full-stack AI-powered tax and financial literacy assistant that helps Indian citizens:
+**TaxSmart AI** is a full-stack, RAG-powered AI agent that helps Indian citizens navigate income tax, UPI payments, online scam awareness, and personal finance management — all in one platform, available in English and Hindi.
 
-- 💬 Ask any income tax or personal finance question in **English or Hindi**
-- 🧮 Calculate their **Old vs New tax regime** and find out which saves more
-- 📅 Track **ITR filing deadlines** on a visual calendar
-- 📁 Upload and **AI-scan tax documents** stored securely on IBM Cloud
-- 📚 Download official **tax forms** with **IBM Granite AI fill guides**
-- 🎤 Ask questions using **voice input** (mic)
-- 🔍 Get **keyword-aware answers** powered by Watson NLU + RAG
+Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates how enterprise-grade AI can be made accessible for financial literacy at scale.
 
 ---
 
-## 🏗️ Architecture
+## 🎯 Problem Statement Alignment
+
+| PS #7 Requirement | Implementation |
+|---|---|
+| RAG-based AI Agent | ChromaDB + sentence-transformers + watsonx.ai Granite |
+| Tax practices | 80C, 80D, HRA, Old vs New regime, TDS, capital gains |
+| UPI guidance | Knowledge base doc on UPI safety and transaction limits |
+| Online scam awareness | Dedicated KB doc — KYC fraud, phishing, how to report |
+| Personal finance | 50-30-20 budgeting, interest rates, emergency fund guidance |
+| Multilingual support | Full Hindi/English toggle — Granite responds in selected language |
+| IBM Cloud services | 5 IBM services actively integrated |
+
+---
+
+## ☁️ IBM Cloud Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                   React Frontend                     │
-│  AI Chat │ Tax Calculator │ Calendar │ Form Vault    │
-└──────────────────────┬──────────────────────────────┘
-                       │ HTTP
-┌──────────────────────▼──────────────────────────────┐
-│                 Flask Backend (Python)               │
-│                                                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐  │
-│  │ Watson NLU  │  │  ChromaDB    │  │  PyMuPDF   │  │
-│  │  Keywords   │  │  RAG Search  │  │ PDF Parser │  │
-│  └──────┬──────┘  └──────┬───────┘  └─────┬──────┘  │
-│         └────────────────▼────────────────┘          │
-│                  ┌──────────────┐                     │
-│                  │ watsonx.ai   │                     │
-│                  │   Granite    │                     │
-│                  └──────────────┘                     │
-│                  ┌──────────────┐                     │
-│                  │  IBM Cloud   │                     │
-│                  │Object Storage│                     │
-│                  └──────────────┘                     │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                      React Frontend                          │
+│   AI Chat │ Toolkit │ Form Vault │ Doc Checker               │
+└─────────────────────────┬───────────────────────────────────┘
+                          │ REST API
+┌─────────────────────────▼───────────────────────────────────┐
+│                   Flask Backend (Python)                      │
+│                                                              │
+│  ┌──────────────┐  ┌─────────────┐  ┌──────────────────┐   │
+│  │  Watson NLU  │  │  ChromaDB   │  │    PyMuPDF       │   │
+│  │  Keywords    │  │  RAG Search │  │   PDF Parser     │   │
+│  └──────┬───────┘  └──────┬──────┘  └────────┬─────────┘   │
+│         └─────────────────▼──────────────────┘              │
+│                   ┌──────────────┐                           │
+│                   │ watsonx.ai   │                           │
+│                   │ Foundation   │                           │
+│                   │   Models     │                           │
+│                   └──────────────┘                           │
+│                   ┌──────────────┐                           │
+│                   │  IBM Cloud   │                           │
+│                   │  Object      │                           │
+│                   │  Storage     │                           │
+│                   └──────────────┘                           │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ☁️ IBM Cloud Services Used
+## ☁️ IBM Services Used (5 Active Services)
 
-| # | Service | Purpose |
-|---|---------|---------|
-| 1 | **watsonx.ai (Foundation Models)** | Core LLM for chat, document scanning, form guides, Hindi responses |
-| 2 | **Watson Machine Learning** | Serves the foundation model inference endpoint |
-| 3 | **Watson Natural Language Understanding** | Extracts keywords from user queries to enhance RAG retrieval |
-| 4 | **Watson Assistant** | Conversational AI service integration |
-| 5 | **IBM Cloud Object Storage** | Secure storage for all uploaded tax documents |
+| # | Service | How Used |
+|---|---------|----------|
+| 1 | **watsonx.ai** | Foundation model inference — chat, document scanning, form guides, bilingual responses |
+| 2 | **Watson Machine Learning** | Serves the foundation model endpoint via WML |
+| 3 | **Watson Natural Language Understanding** | Keyword extraction from user queries to enhance RAG retrieval accuracy |
+| 4 | **Watson Assistant** | Conversational AI service — integrated and active |
+| 5 | **IBM Cloud Object Storage** | Secure cloud storage for all uploaded tax documents |
 
 ---
 
 ## ✨ Features
 
-### 💬 AI Tax Chat
-- Ask any question about Indian income tax, UPI, scams, budgeting
-- Powered by **RAG pipeline** — answers grounded in 15-document knowledge base
-- **Watson NLU** extracts keywords to improve search accuracy
-- Shows NLU-detected keywords with every response
-- Suggested questions for quick start
+### 💬 AI Tax Chat with Citation-Based RAG
+- Ask any question about Indian tax, UPI, scams, budgeting
+- **Citation-Based RAG** — shows exactly which knowledge base document was used
+- **Watson NLU** keyword extraction improves retrieval accuracy
+- Powered by 15-document knowledge base covering all PS #7 topics
 
 ### 🎤 Voice Input
-- Click mic button and speak your question
+- Click mic → speak your question
 - Works in **English (en-IN)** and **Hindi (hi-IN)**
-- Uses browser Web Speech API
 
-### 🌐 Bilingual Support
-- Toggle between **English** and **Hindi** (हि)
-- Granite LLM responds in the selected language
+### 🌐 Hindi / English Toggle
+- Switch language from top nav
+- All AI responses (chat, scan, form guides) respond in selected language
 
 ### 🧮 Tax Calculator
-- Enter gross income + deductions (80C, 80D, home loan interest)
-- Instantly compares **Old Regime vs New Regime**
-- Shows taxable income, income tax, 4% cess, total tax
-- Highlights the better regime with savings amount
-- Applies rebate under Section 87A automatically
+- Enter income + deductions (80C, 80D, home loan)
+- Compares Old Regime vs New Regime instantly
+- Highlights better option with exact savings amount
+- Applies Section 87A rebate automatically
 
 ### 📅 Deadline Calendar
-- Full interactive calendar (navigate months)
-- ITR filing deadlines highlighted on actual dates
-- Today highlighted in blue
-- Urgent deadlines in yellow with URGENT badge
-- Deadline list below calendar for current month
+- Interactive calendar (navigate months)
+- ITR deadlines highlighted on actual dates with days-left counter
+- Side-by-side layout — deadline cards + calendar view
+- Urgent deadline alerts
+
+### 📊 Filing Readiness Meter
+- 3-step wizard — income details, documents, deductions
+- IBM Granite gives **readiness score out of 100**
+- Action plan with specific steps to become filing-ready
+- Recommends correct ITR form (ITR-1, ITR-2 etc.)
 
 ### 🗄️ Smart Form Vault
 **Forms Library:**
-- 6 common tax forms (ITR-1, ITR-2, Form 16, 26AS, 15G/H, 12BB)
+- 6 tax forms (ITR-1, ITR-2, Form 16, 26AS, 15G/H, 12BB)
 - Official download links to Income Tax Portal
-- **IBM Granite AI Guide** — step-by-step instructions to fill each form
+- **IBM Granite AI Guide** — step-by-step fill instructions per form
 
 **My Documents:**
-- Drag & drop or click to upload PDFs/images
-- Files stored on **IBM Cloud Object Storage**
-- **Auto-scan on upload** — Granite AI extracts key tax info from PDFs
-- **Manual Scan** button — AI analysis of any document
-- **Completeness Check** — AI verifies if required fields are present
-- Smart auto-tagging (Form 16, ITR, HRA, 80C etc.)
-- Delete documents
+- Drag & drop upload → stored on **IBM Cloud Object Storage**
+- **Auto-scan on upload** — Granite extracts tax info from PDFs instantly
+- **Manual Scan** — detailed AI analysis on demand
+- **Completeness Check** — AI verifies required fields are present
+- **Auto-links to Doc Checker** — uploading Form16.pdf auto-ticks Form 16 in Doc Checker
 
-### 📚 Knowledge Base (RAG)
-15 documents covering:
-- Section 80C, 80D, 80CCD(1B), Section 24B
-- Old vs New tax regime comparison (FY 2024-25)
-- HRA calculation rules
-- Capital gains tax (STCG, LTCG)
-- TDS and Form 16 guidance
-- Income tax slabs FY 2024-25 + 87A rebate
-- Standard deduction (old vs new regime)
-- UPI payments guide
-- Online scam awareness + how to report
-- Personal budgeting (50-30-20 rule)
-- Interest rates (savings, FD, home loan, personal loan)
-- Digital banking safety tips
+### ✅ AI Document Completeness Checker
+- 12-document checklist across 6 categories (Identity, Salary, Tax, Banking, Deductions, Investments)
+- CRITICAL document badges
+- IBM Granite gives **completeness score out of 100**
+- Missing documents listed with exact instructions on where to obtain them
+- **Smart integration** — Form Vault uploads auto-check relevant items
+
+### 📚 Knowledge Base (15 Documents)
+| # | Document | Topic |
+|---|----------|-------|
+| 1 | Section 80C | PPF, ELSS, LIC, NSC, EPF deductions |
+| 2 | Section 80D | Health insurance deductions |
+| 3 | Old vs New Regime | Complete comparison |
+| 4 | HRA Calculation | Exemption rules |
+| 5 | Standard Deduction | FY 2024-25 rates |
+| 6 | Section 80CCD | NPS additional deduction |
+| 7 | Capital Gains Tax | STCG, LTCG rates |
+| 8 | TDS & Form 16 | Salary TDS guide |
+| 9 | Section 24B | Home loan interest |
+| 10 | Income Tax Slabs | FY 2024-25 new regime |
+| 11 | UPI Payments | Safety guide, limits |
+| 12 | Online Scams | KYC fraud, phishing, reporting |
+| 13 | 50-30-20 Budgeting | Personal finance |
+| 14 | Interest Rates | FD, home loan, credit card |
+| 15 | Digital Banking | Safety tips |
 
 ---
 
@@ -142,15 +159,14 @@ TaxSmart AI is a full-stack AI-powered tax and financial literacy assistant that
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React (functional components, hooks, inline styles) |
+| Frontend | React 18 (hooks, inline styles) |
 | Backend | Python 3.13, Flask, Flask-CORS |
 | LLM | IBM watsonx.ai — `mistralai/mistral-small-3-1-24b-instruct-2503` |
 | NLP | IBM Watson Natural Language Understanding |
-| RAG | ChromaDB (local vector store) + sentence-transformers |
-| PDF | PyMuPDF (fitz) |
-| Storage | IBM Cloud Object Storage (`ibm-cos-sdk`) |
+| RAG | ChromaDB + sentence-transformers (all-MiniLM-L6-v2) |
+| PDF Parsing | PyMuPDF (fitz) |
+| Cloud Storage | IBM Cloud Object Storage (ibm-cos-sdk) |
 | Voice | Browser Web Speech API |
-| Auth | IBM IAM API Key |
 
 ---
 
@@ -159,18 +175,33 @@ TaxSmart AI is a full-stack AI-powered tax and financial literacy assistant that
 ```
 taxsmart-ai/
 ├── backend/
-│   ├── app.py              # Flask API (5 endpoints)
-│   ├── knowledge_base.py   # ChromaDB RAG (15 documents)
-│   ├── .env                # IBM credentials (not committed)
-│   └── requirements.txt
+│   ├── app.py                  # Flask API — 7 endpoints
+│   ├── knowledge_base.py       # ChromaDB RAG — 15 documents
+│   └── .env                    # IBM credentials (not committed)
 ├── frontend/
-│   ├── src/
-│   │   ├── App.js          # Main app (chat, toolkit, form vault)
-│   │   ├── TaxCalculator.js
-│   │   └── FormVault.js
-│   └── package.json
+│   └── src/
+│       ├── App.js              # Main app — navigation, chat, language
+│       ├── TaxCalculator.js    # Old vs New regime calculator
+│       ├── FormVault.js        # Forms library + document vault
+│       ├── FilingReadiness.js  # 3-step ITR readiness wizard
+│       └── DocChecker.js       # Document completeness checker
 └── README.md
 ```
+
+---
+
+## 🔌 API Endpoints
+
+| Method | Endpoint | IBM Service | Description |
+|--------|----------|------------|-------------|
+| POST | `/chat` | watsonx.ai + NLU | RAG-powered chat with citations |
+| GET | `/health` | — | Service status check |
+| POST | `/upload` | COS + watsonx.ai | Upload + auto-scan document |
+| GET | `/documents` | COS | List all stored documents |
+| DELETE | `/documents/<key>` | COS | Delete document |
+| POST | `/scan` | watsonx.ai | AI scan / completeness check |
+| POST | `/filing-readiness` | watsonx.ai | ITR readiness analysis |
+| POST | `/doc-checker` | watsonx.ai | Document completeness audit |
 
 ---
 
@@ -181,20 +212,23 @@ taxsmart-ai/
 - Node.js 18+
 - IBM Cloud account (Lite/Free tier)
 
-### IBM Services Required
-Create these on [cloud.ibm.com](https://cloud.ibm.com) (all free Lite tier):
-1. watsonx.ai Studio + Watson Machine Learning
-2. Watson Natural Language Understanding
-3. Watson Assistant
-4. Cloud Object Storage (create a bucket named `taxsmart-documents`)
+### IBM Services to Create
+All free on IBM Cloud Lite:
+1. **watsonx.ai Studio** → create project → associate Watson Machine Learning
+2. **Watson Natural Language Understanding** → Lite plan
+3. **Watson Assistant** → Lite plan
+4. **Cloud Object Storage** → Lite plan → create bucket `taxsmart-documents`
 
-### Backend Setup
+### Backend
 
 ```bash
 cd backend
 python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Mac/Linux
+
+# Windows
+venv\Scripts\activate
+# Mac/Linux
+source venv/bin/activate
 
 pip install flask flask-cors ibm-watsonx-ai chromadb \
     sentence-transformers python-dotenv ibm-watson \
@@ -207,20 +241,19 @@ IBM_API_KEY=your_watsonx_api_key
 IBM_PROJECT_ID=your_project_id
 IBM_URL=https://us-south.ml.cloud.ibm.com
 NLU_API_KEY=your_nlu_api_key
-NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/YOUR_INSTANCE_ID
+NLU_URL=https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/YOUR_ID
 COS_API_KEY=your_cos_api_key
 COS_INSTANCE_ID=crn:v1:bluemix:public:cloud-object-storage:...
 COS_ENDPOINT=https://s3.us-south.cloud-object-storage.appdomain.cloud
 COS_BUCKET=taxsmart-documents
 ```
 
-Run backend:
 ```bash
 python app.py
-# → Running on http://127.0.0.1:5000
+# → All systems ready! Running on http://127.0.0.1:5000
 ```
 
-### Frontend Setup
+### Frontend
 
 ```bash
 cd frontend
@@ -231,41 +264,35 @@ npm start
 
 ---
 
-## 🔌 API Endpoints
+## 🎥 Demo
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/chat` | AI chat with RAG + NLU |
-| GET | `/health` | Health check + service status |
-| POST | `/upload` | Upload document to IBM COS + auto-scan |
-| GET | `/documents` | List all documents from IBM COS |
-| DELETE | `/documents/<key>` | Delete document from IBM COS |
-| POST | `/scan` | AI scan/completeness check on document |
-
----
-
-## 📸 Screenshots
-
-| AI Chat | Tax Calculator | Form Vault |
-|---------|---------------|------------|
-| RAG-powered Q&A with NLU keywords | Old vs New regime comparison | Forms library + My Documents |
+**Features to demonstrate:**
+1. Ask a tax question → see Citation-Based RAG sources
+2. Switch to Hindi → ask in Hindi → get Hindi response
+3. Use voice input
+4. Tax Calculator → Old vs New regime comparison
+5. Filing Readiness → 3-step wizard → score + action plan
+6. Upload Form 16 PDF → auto-scan + auto-check in Doc Checker
+7. Doc Checker → see Form 16 already ticked → check remaining → get completeness score
 
 ---
 
-## 🙋 Author
+## 👩‍💻 Author
 
 **Kavya Sai**
 B.Tech CSE (NLP Specialization) — KL University, Hyderabad
+LeetCode: 1759 | CodeChef: 1132
 IBM SkillsBuild Virtual Internship — AICTE 2026
 
 ---
 
 ## ⚠️ Disclaimer
 
-TaxSmart AI provides general tax and financial information for educational purposes only. It is not a substitute for professional tax or financial advice. Always verify important financial decisions with a qualified professional.
+TaxSmart AI provides general tax and financial information for educational purposes only. Always consult a qualified tax professional for important financial decisions.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License — feel free to use and build upon this project.
+ENDOFFILE
