@@ -96,7 +96,7 @@ def chat():
         search_query = user_question + " " + " ".join(keywords) if keywords else user_question
 
         # Step 3: Search knowledge base (RAG)
-        relevant_docs = search_knowledge(collection, search_query)
+        relevant_docs, source_ids = search_knowledge(collection, search_query)
 
         # Step 4: Language instruction
         lang_instruction = "Always respond in Hindi language only." if language == 'hi' else "Always respond in English."
@@ -127,10 +127,11 @@ KEYWORDS IDENTIFIED IN QUESTION: {', '.join(keywords) if keywords else 'none'}""
         answer = response['choices'][0]['message']['content']
 
         return jsonify({
-            'response': answer,
-            'keywords': keywords,
-            'status': 'success'
-        })
+    'response': answer,
+    'keywords': keywords,
+    'sources': source_ids,
+    'status': 'success'
+})
 
     except Exception as e:
         import traceback

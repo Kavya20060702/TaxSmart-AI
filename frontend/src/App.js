@@ -291,9 +291,13 @@ export default function App() {
       });
       const data = await response.json();
       if (data.status === "success") {
-        setMessages((prev) => [...prev, { role: "assistant", text: data.response }]);
-        setKeywords(data.keywords || []);
-      } else {
+  setMessages((prev) => [...prev, { 
+    role: "assistant", 
+    text: data.response,
+    sources: data.sources || []
+  }]);
+  setKeywords(data.keywords || []);
+} else {
         setMessages((prev) => [...prev, { role: "assistant", text: "Something went wrong. Please try again." }]);
       }
     } catch {
@@ -487,22 +491,34 @@ export default function App() {
                     </div>
 
                     {/* Suggestions */}
-                    {msg.suggestions && (
-                      <div style={{ marginTop: 10, marginLeft: 48 }}>
-                        <p style={{ margin: "0 0 6px", fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Suggested Next Steps:</p>
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                          {msg.suggestions.map((s, j) => (
-                            <button key={j} onClick={() => sendMessage(s)} style={{
-                              padding: "5px 12px", backgroundColor: C.white,
-                              color: C.primary, border: `1px solid ${C.primary}`,
-                              borderRadius: 20, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                              transition: "all 0.15s",
-                            }}>{s}</button>
-                          ))}
-                        </div>
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div style={{ marginTop: 8, marginLeft: msg.role === "user" ? 0 : 48 }}>
+                      <p style={{ margin: "0 0 6px", fontSize: 11, color: "#6A6A6A", fontWeight: 600 }}>
+                        📚 Sources used:
+                      </p>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {msg.sources.map((src, si) => (
+                          <div key={si} style={{
+                            display: "flex", alignItems: "center", gap: 6,
+                            backgroundColor: "#fdf0f0",
+                            border: "1px solid #e8d0d0",
+                            borderRadius: 20, padding: "3px 10px",
+                          }}>
+                            <span style={{
+                              width: 16, height: 16, borderRadius: "50%",
+                              backgroundColor: "#822222", color: "white",
+                              fontSize: 9, fontWeight: 700,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              flexShrink: 0,
+                            }}>{src.rank}</span>
+                            <span style={{ fontSize: 11, color: "#822222", fontWeight: 600 }}>
+                              {src.title}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-
+                    </div>
+                  )}
                     {/* NLU Keywords */}
                     {msg.role === "assistant" && i === messages.length - 1 && keywords.length > 0 && (
                       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 8, marginLeft: 48 }}>
