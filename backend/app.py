@@ -291,7 +291,149 @@ Keep it concise and clear.
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+# ---- Filing Readiness Check ----
+@app.route('/filing-readiness', methods=['POST'])
+def filing_readiness():
+    try:
+        data = request.get_json()
+        language = data.get('language', 'en')
+        lang_instruction = "Always respond in Hindi language only." if language == 'hi' else "Always respond in English."
 
+        user_data = f"""
+Income Details:
+- Employment Type: {data.get('employment_type', 'Not provided')}
+- Annual Salary: Rs {data.get('salary', 0)}
+- Other Income: Rs {data.get('other_income', 0)}
+- Tax Regime: {data.get('regime', 'Not decided')}
+
+Documents Available:
+- Form 16: {data.get('has_form16', False)}
+- Form 26AS: {data.get('has_26as', False)}
+- Bank Statements: {data.get('has_bank', False)}
+- Investment Proofs (80C): {data.get('has_80c', False)}
+- Health Insurance (80D): {data.get('has_80d', False)}
+- Home Loan Certificate: {data.get('has_homeloan', False)}
+- Rent Receipts (HRA): {data.get('has_hra', False)}
+
+Deductions Status:
+- 80C Invested Amount: Rs {data.get('invested_80c', 0)}
+- 80D Premium Paid: Rs {data.get('paid_80d', 0)}
+- HRA Applicable: {data.get('hra_applicable', False)}
+"""
+
+        messages = [
+            {
+                "role": "system",
+                "content": f"""You are TaxSmart AI, an Indian tax filing expert.
+Analyze the user's filing readiness and provide:
+1. A readiness SCORE out of 100 (just the number, on first line like "SCORE: 85")
+2. A STATUS: Ready / Almost Ready / Not Ready
+3. What documents are MISSING
+4. What actions they must take BEFORE filing
+5. Estimated time to be ready
+6. Which ITR form they should file (ITR-1, ITR-2 etc.)
+Be specific and actionable. Keep it under 200 words.
+{lang_instruction}"""
+            },
+            {
+                "role": "user",
+                "content": f"Check my ITR filing readiness:\n{user_data}"
+            }
+        ]
+
+        response = model.chat(messages=messages)
+        answer = response['choices'][0]['message']['content']
+
+        # Extract score from response
+        score = 50
+        for line in answer.split('\n'):
+            if 'SCORE:' in line.upper():
+                try:
+                    score = int(''.join(filter(str.isdigit, line.split(':')[1][:4])))
+                    score = min(100, max(0, score))
+                except:
+                    pass
+
+        return jsonify({
+            'status': 'success',
+            'analysis': answer,
+            'score': score
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+    
+# ---- Document Completeness Checker ----
+@app.route('/doc-checker', methods=['POST'])
+def doc_checker():
+    try:
+        data = request.get_json()
+        language = data.get('language', 'en')
+        lang_instruction = "Always respond in Hindi language only." if language == 'hi' else "Always respond in English."
+
+        checklist = f"""
+ITR Filing Document Checklist Status:
+- Form 16 (TDS Certificate): {data.get('form16', False)}
+- Form 26AS (Tax Statement): {data.get('form26as', False)}
+- AIS/TIS Statement: {data.get('ais', False)}
+- Bank Statements: {data.get('bank', False)}
+- 80C Investment Proofs: {data.get('inv_80c', False)}
+- 80D Health Insurance Receipt: {data.get('ins_80d', False)}
+- Home Loan Certificate: {data.get('homeloan', False)}
+- Rent Receipts (HRA): {data.get('hra', False)}
+- PAN Card: {data.get('pan', False)}
+- Aadhaar Card: {data.get('aadhaar', False)}
+- Previous Year ITR: {data.get('prev_itr', False)}
+- Capital Gains Statement: {data.get('cap_gains', False)}
+
+Employment Type: {data.get('employment_type', 'Salaried')}
+Tax Regime: {data.get('regime', 'New Regime')}
+"""
+
+        messages = [
+            {
+                "role": "system",
+                "content": f"""You are TaxSmart AI, an Indian tax expert.
+Analyze the document checklist and provide:
+1. COMPLETENESS SCORE out of 100 (first line: "SCORE: 85")
+2. List of CRITICAL missing documents (must have)
+3. List of OPTIONAL missing documents (good to have)
+4. Specific steps to obtain each missing document
+5. Overall filing status: Ready / Almost Ready / Incomplete
+Be specific, practical and helpful.
+Keep under 200 words.
+{lang_instruction}"""
+            },
+            {
+                "role": "user",
+                "content": f"Check my document completeness for ITR filing:\n{checklist}"
+            }
+        ]
+
+        response = model.chat(messages=messages)
+        answer = response['choices'][0]['message']['content']
+
+        score = 50
+        for line in answer.split('\n'):
+            if 'SCORE:' in line.upper():
+                try:
+                    score = int(''.join(filter(str.isdigit, line.split(':')[1][:4])))
+                    score = min(100, max(0, score))
+                except:
+                    pass
+
+        return jsonify({
+            'status': 'success',
+            'analysis': answer,
+            'score': score
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
 
 # ---- List Documents ----
 @app.route('/documents', methods=['GET'])

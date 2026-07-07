@@ -69,7 +69,7 @@ const TAX_FORMS = [
   },
 ];
 
-export default function FormVault() {
+export default function FormVault({ language = "en" }) {
   const [selectedForm, setSelectedForm] = useState(null);
   const [guideLoading, setGuideLoading] = useState(false);
   const [guide, setGuide] = useState(null);
@@ -159,9 +159,10 @@ export default function FormVault() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          filename: doc.name,
-          text: `Document: ${doc.name}\nSize: ${doc.size}\nUploaded: ${doc.date}\nThis appears to be a tax document. Please analyze based on filename and provide key tax information.`,
-        }),
+  filename: doc.name,
+  text: `Document: ${doc.name}\nSize: ${doc.size}\nUploaded: ${doc.date}\nThis appears to be a tax document. Please analyze based on filename and provide key tax information.`,
+  language: language,
+}),
       });
       const data = await res.json();
       if (data.status === "success") setScanResult(data.summary);
@@ -180,13 +181,10 @@ export default function FormVault() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          filename: doc.name,
-          text: `Check this tax document for completeness: ${doc.name}. Size: ${doc.size}. Uploaded: ${doc.date}. 
-          Analyze what type of form this likely is based on the filename.
-          List what key fields SHOULD be present in this type of form.
-          Give a completeness verdict: Complete / Incomplete / Unable to verify.
-          Suggest what might be missing if incomplete.`,
-        }),
+  filename: doc.name,
+  text: `Check this tax document...`,
+  language: language,
+}),
       });
       const data = await res.json();
       if (data.status === "success") setCheckResult(data.summary);
@@ -243,8 +241,8 @@ export default function FormVault() {
           <button key={s.id} onClick={() => { setActiveSection(s.id); setSelectedForm(null); setGuide(null); }} style={{
             padding: "10px 24px", border: "none", cursor: "pointer",
             backgroundColor: "transparent", fontSize: 14, fontWeight: 600,
-            color: activeSection === s.id ? "#0f62fe" : "#76777d",
-            borderBottom: activeSection === s.id ? "2px solid #0f62fe" : "2px solid transparent",
+            color: activeSection === s.id ? "#822222" : "#76777d",
+            borderBottom: activeSection === s.id ? "2px solid #822222" : "2px solid transparent",
             marginBottom: -2, transition: "all 0.2s",
           }}>{s.label}</button>
         ))}
@@ -277,7 +275,7 @@ export default function FormVault() {
                 <p style={{ margin: "0 0 12px", fontSize: 11, color: "#76777d" }}><strong>For:</strong> {form.eligibility}</p>
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => getAIGuide(form)} style={{
-                    flex: 1, backgroundColor: "#0f62fe", color: "white",
+                    flex: 1, backgroundColor: "#822222", color: "white",
                     border: "none", borderRadius: 8, padding: "8px",
                     fontSize: 11, fontWeight: 700, cursor: "pointer",
                   }}>🤖 AI Guide</button>
@@ -303,7 +301,7 @@ export default function FormVault() {
             display: "flex", alignItems: "center", gap: 6,
           }}>← Back to Forms</button>
 
-          <div style={{ backgroundColor: "#0f62fe", borderRadius: 12, padding: "20px 24px", marginBottom: 20, color: "white" }}>
+          <div style={{ backgroundColor: "#822222", borderRadius: 12, padding: "20px 24px", marginBottom: 20, color: "white" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <span style={{ fontSize: 32 }}>{selectedForm.icon}</span>
               <div>
@@ -344,7 +342,7 @@ export default function FormVault() {
           </div>
 
           <a href={selectedForm.downloadUrl} target="_blank" rel="noreferrer" style={{
-            display: "block", marginTop: 16, backgroundColor: "#006c49", color: "white",
+            display: "block", marginTop: 16, backgroundColor: "#2F4F4F", color: "white",
             border: "none", borderRadius: 10, padding: "12px", fontSize: 14, fontWeight: 700,
             textDecoration: "none", textAlign: "center",
           }}>⬇️ Download {selectedForm.name} from Income Tax Portal</a>
@@ -361,7 +359,7 @@ export default function FormVault() {
             onDrop={(e) => { e.preventDefault(); setDragging(false); uploadFiles(Array.from(e.dataTransfer.files)); }}
             onClick={() => fileRef.current.click()}
             style={{
-              border: `2px dashed ${dragging ? "#006c49" : "#c6c6cd"}`,
+              border: `2px dashed ${dragging ? "#2F4F4F" : "#c6c6cd"}`,
               borderRadius: 12, padding: "32px 24px", textAlign: "center",
               backgroundColor: dragging ? "#defbe6" : uploading ? "#eff4ff" : "#f8f9ff",
               cursor: "pointer", marginBottom: 20, transition: "all 0.2s",

@@ -220,7 +220,7 @@ const styles = {
     margin: "0 auto",
   },
   heading: {
-    color: "#0f62fe",
+    color: "#822222",
     margin: "0 0 4px 0",
     fontSize: "22px",
   },
@@ -253,7 +253,7 @@ const styles = {
     outline: "none",
   },
   calculateBtn: {
-    backgroundColor: "#0f62fe",
+    backgroundColor: "#822222",
     color: "white",
     border: "none",
     padding: "12px 32px",
@@ -270,7 +270,7 @@ const styles = {
     gap: "16px",
   },
   winnerBanner: {
-    backgroundColor: "#0f62fe",
+    backgroundColor: "#822222",
     color: "white",
     padding: "14px 20px",
     borderRadius: "8px",

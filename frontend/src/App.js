@@ -1,16 +1,40 @@
 import { useState, useRef, useEffect } from "react";
 import TaxCalculator from "./TaxCalculator";
 import FormVault from "./FormVault";
+import FilingReadiness from "./FilingReadiness";
+import DocChecker from "./DocChecker";
+
+// ── Design Tokens ─────────────────────────────────────────────────────────────
+const C = {
+  primary: "#822222",
+  primaryDark: "#5c1a1a",
+  primaryLight: "#fdf0f0",
+  secondary: "#2F4F4F",
+  secondaryLight: "#e8f0f0",
+  teal: "#3a7d7d",
+  gold: "#C4AF37",
+  success: "#1a7a3c",
+  successLight: "#e8f7ee",
+  warning: "#b45309",
+  warningLight: "#fef3c7",
+  error: "#b91c1c",
+  errorLight: "#fee2e2",
+  neutral: "#6A6A6A",
+  text: "#1a1a1a",
+  textMuted: "#6A6A6A",
+  border: "#e2e2e2",
+  bg: "#f5f5f5",
+  white: "#ffffff",
+};
 
 const TABS = {
   CHAT: "chat",
   TOOLKIT: "toolkit",
-  VAULT: "vault",
   FORMS: "forms",
+  DOCCHECK: "doccheck",
 };
 
-
-// ── Calendar View ────────────────────────────────────────────────────────────
+// ── Calendar View ─────────────────────────────────────────────────────────────
 function CalendarView({ deadlines }) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -42,134 +66,139 @@ function CalendarView({ deadlines }) {
   const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
   const todayDate = today.getDate();
 
-  const thisMonthDeadlines = deadlines.filter(d => {
-    const parts = d.date.split(" ");
-    return new Date(`${parts[1]} 1`).getMonth() === currentMonth && parseInt(parts[2]) === currentYear;
-  });
+  // Days left calculator
+  const daysLeft = (dateStr) => {
+    const parts = dateStr.split(" ");
+    const target = new Date(`${parts[1]} ${parts[0]}, ${parts[2]}`);
+    const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    return diff;
+  };
 
   return (
-    <div style={{ maxWidth: 500, margin: "0 auto" }}>
-      {/* Calendar Card */}
-      <div style={{ backgroundColor: "white", borderRadius: 16, padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,0.08)", border: "1px solid #e0e0e0" }}>
+    <div style={{ padding: "24px 32px", maxWidth: 900, margin: "0 auto" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text, margin: "0 0 4px" }}>Important Deadlines</h2>
+      <p style={{ color: C.textMuted, fontSize: 14, marginBottom: 24 }}>Stay on top of your tax obligations with real-time tracking.</p>
 
-        {/* Today label */}
-        <p style={{ margin: "0 0 16px", fontSize: 13, color: "#76777d", fontWeight: 500 }}>
-          {today.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })}
-        </p>
-
-        {/* Month Navigation */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-          <h3 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0b1c30" }}>
-            {monthNames[currentMonth]}, {currentYear}
-          </h3>
-          <div style={{ display: "flex", gap: 4 }}>
-            <button onClick={prevMonth} style={{
-              width: 32, height: 32, borderRadius: "50%", border: "1px solid #e0e0e0",
-              backgroundColor: "white", cursor: "pointer", fontSize: 13, color: "#45464d",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>▲</button>
-            <button onClick={nextMonth} style={{
-              width: 32, height: 32, borderRadius: "50%", border: "1px solid #e0e0e0",
-              backgroundColor: "white", cursor: "pointer", fontSize: 13, color: "#45464d",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>▼</button>
-          </div>
-        </div>
-
-        {/* Day Headers */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 8 }}>
-          {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => (
-            <div key={d} style={{ textAlign: "center", fontSize: 12, fontWeight: 600, color: "#76777d", padding: "4px 0" }}>{d}</div>
-          ))}
-        </div>
-
-        {/* Day Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
-          {Array.from({ length: firstDay }).map((_, i) => (
-            <div key={`e-${i}`} style={{ height: 44 }} />
-          ))}
-          {Array.from({ length: daysInMonth }).map((_, i) => {
-            const day = i + 1;
-            const deadline = getDeadlineForDay(day);
-            const isToday = isCurrentMonth && day === todayDate;
-
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24 }}>
+        {/* Left — Deadline Cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {deadlines.map((d, i) => {
+            const dl = daysLeft(d.date);
+            const isUrgent = dl <= 7 && dl >= 0;
+            const isPast = dl < 0;
             return (
-              <div key={day} title={deadline ? deadline.event : ""} style={{
-                height: 44, display: "flex", flexDirection: "column",
-                alignItems: "center", justifyContent: "center",
-                borderRadius: 10, cursor: deadline ? "pointer" : "default",
-                backgroundColor: isToday ? "#0f62fe" : deadline ? (deadline.urgent ? "#fff8e1" : "#defbe6") : "transparent",
-                transition: "background 0.15s",
+              <div key={i} style={{
+                backgroundColor: C.white, border: `1px solid ${isUrgent ? C.error : C.border}`,
+                borderLeft: `4px solid ${isUrgent ? C.error : isPast ? C.neutral : C.secondary}`,
+                borderRadius: 8, padding: "16px 20px",
+                display: "flex", alignItems: "center", gap: 16,
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
               }}>
-                <span style={{
-                  fontSize: 14,
-                  fontWeight: isToday || deadline ? 700 : 400,
-                  color: isToday ? "white" : deadline ? (deadline.urgent ? "#7c5800" : "#0e6027") : "#0b1c30",
-                }}>{day}</span>
-                {deadline && !isToday && (
-                  <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: deadline.urgent ? "#f1c21b" : "#24a148", marginTop: 1 }} />
-                )}
+                <div style={{ flex: 1 }}>
+                  {isUrgent && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: C.error }} />
+                      <span style={{ fontSize: 10, fontWeight: 700, color: C.error, textTransform: "uppercase", letterSpacing: "0.08em" }}>Urgent</span>
+                    </div>
+                  )}
+                  <p style={{ margin: 0, fontWeight: 600, fontSize: 14, color: C.text }}>{d.event}</p>
+                  <p style={{ margin: "4px 0 0", fontSize: 12, color: C.textMuted, display: "flex", alignItems: "center", gap: 4 }}>
+                    📅 {d.date}
+                  </p>
+                </div>
+                <div style={{
+                  minWidth: 52, height: 52, borderRadius: 8,
+                  backgroundColor: isUrgent ? C.error : isPast ? "#9ca3af" : C.secondary,
+                  display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", color: "white",
+                }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1 }}>
+                    {isPast ? "—" : dl}
+                  </span>
+                  <span style={{ fontSize: 9, fontWeight: 600, textTransform: "uppercase" }}>
+                    {isPast ? "Past" : "Days"}
+                  </span>
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Legend */}
-        <div style={{ display: "flex", gap: 20, marginTop: 16, paddingTop: 16, borderTop: "1px solid #e0e0e0" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#0f62fe" }} />
-            <span style={{ fontSize: 12, color: "#45464d" }}>Today</span>
+        {/* Right — Calendar */}
+        <div style={{ backgroundColor: C.white, borderRadius: 12, padding: "20px", border: `1px solid ${C.border}`, boxShadow: "0 2px 8px rgba(0,0,0,0.06)", height: "fit-content" }}>
+          {/* Month Nav */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <button onClick={prevMonth} style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${C.border}`, backgroundColor: C.white, cursor: "pointer", fontSize: 12, color: C.textMuted }}>‹</button>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: C.text }}>{monthNames[currentMonth]} {currentYear}</h3>
+            <button onClick={nextMonth} style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${C.border}`, backgroundColor: C.white, cursor: "pointer", fontSize: 12, color: C.textMuted }}>›</button>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#f1c21b" }} />
-            <span style={{ fontSize: 12, color: "#45464d" }}>Urgent</span>
+
+          {/* Day Headers */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", marginBottom: 6 }}>
+            {["Mo","Tu","We","Th","Fr","Sa","Su"].map(d => (
+              <div key={d} style={{ textAlign: "center", fontSize: 11, fontWeight: 700, color: C.textMuted, padding: "3px 0" }}>{d}</div>
+            ))}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: "#24a148" }} />
-            <span style={{ fontSize: 12, color: "#45464d" }}>Deadline</span>
+
+          {/* Days */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2 }}>
+            {Array.from({ length: (firstDay === 0 ? 6 : firstDay - 1) }).map((_, i) => (
+              <div key={`e-${i}`} style={{ height: 36 }} />
+            ))}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const day = i + 1;
+              const deadline = getDeadlineForDay(day);
+              const isToday = isCurrentMonth && day === todayDate;
+              const dl = deadline ? daysLeft(deadline.date) : null;
+              const isUrgent = dl !== null && dl <= 7 && dl >= 0;
+
+              return (
+                <div key={day} title={deadline ? deadline.event : ""} style={{
+                  height: 36, display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", borderRadius: 6,
+                  backgroundColor: isToday ? C.primary : deadline ? (isUrgent ? C.errorLight : C.secondaryLight) : "transparent",
+                  cursor: deadline ? "pointer" : "default",
+                }}>
+                  <span style={{
+                    fontSize: 13, fontWeight: isToday || deadline ? 700 : 400,
+                    color: isToday ? "white" : deadline ? (isUrgent ? C.error : C.secondary) : C.text,
+                  }}>{day}</span>
+                  {deadline && !isToday && (
+                    <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: isUrgent ? C.error : C.secondary, marginTop: 1 }} />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Legend */}
+          <div style={{ marginTop: 16, paddingTop: 12, borderTop: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 6 }}>
+            {[
+              { color: C.error, label: "Payment Due Today" },
+              { color: C.primary, label: "Current Date" },
+              { color: C.secondary, label: "Future Tax Events" },
+            ].map((l) => (
+              <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: l.color }} />
+                <span style={{ fontSize: 11, color: C.textMuted }}>{l.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Pro Tip */}
+          <div style={{ marginTop: 16, backgroundColor: C.primaryLight, borderRadius: 8, padding: "10px 12px" }}>
+            <p style={{ margin: 0, fontSize: 11, color: C.primary, fontWeight: 600 }}>💡 Pro Tip</p>
+            <p style={{ margin: "2px 0 0", fontSize: 11, color: C.primary }}>e-Filing your returns early avoids last-minute server rush.</p>
           </div>
         </div>
-      </div>
-
-      {/* This month's deadlines */}
-      <div style={{ marginTop: 24 }}>
-        <p style={{ margin: "0 0 12px", fontSize: 11, fontWeight: 700, color: "#76777d", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-          Deadlines this month
-        </p>
-        {thisMonthDeadlines.length === 0 ? (
-          <p style={{ color: "#76777d", fontSize: 13, textAlign: "center", padding: "20px 0" }}>No deadlines this month 🎉</p>
-        ) : (
-          thisMonthDeadlines.map((d, i) => (
-            <div key={i} style={{
-              display: "flex", alignItems: "center", gap: 12,
-              backgroundColor: "white", border: `1px solid ${d.urgent ? "#f1c21b" : "#e0e0e0"}`,
-              borderRadius: 10, padding: "12px 16px", marginBottom: 8,
-              boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-            }}>
-              <div style={{
-                width: 42, height: 42, borderRadius: 8, flexShrink: 0,
-                backgroundColor: d.urgent ? "#fff8e1" : "#defbe6",
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
-              }}>{d.urgent ? "⚠️" : "📅"}</div>
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: "#0b1c30" }}>{d.event}</p>
-                <p style={{ margin: 0, fontSize: 12, color: "#76777d" }}>{d.date}</p>
-              </div>
-              {d.urgent && (
-                <span style={{ backgroundColor: "#f1c21b", color: "#7c5800", padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>URGENT</span>
-              )}
-            </div>
-          ))
-        )}
       </div>
     </div>
   );
 }
 
-// ── Toolkit ──────────────────────────────────────────────────────────────────
+// ── Toolkit ───────────────────────────────────────────────────────────────────
 function Toolkit() {
   const [tool, setTool] = useState("calculator");
-
   const deadlines = [
     { date: "31 Jul 2025", event: "ITR Filing Deadline (Individuals)", urgent: true },
     { date: "15 Jun 2025", event: "Advance Tax — 1st Instalment (15%)", urgent: false },
@@ -181,37 +210,45 @@ function Toolkit() {
   ];
 
   return (
-    <div style={{ padding: "32px", maxWidth: 760, margin: "0 auto" }}>
-      <h2 style={{ fontSize: 20, fontWeight: 700, color: "#0b1c30", margin: "0 0 4px" }}>Tax Toolkit</h2>
-      <p style={{ color: "#45464d", fontSize: 14, marginBottom: 24 }}>Calculate your tax liability and track important deadlines.</p>
-
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Sub-tabs */}
-      <div style={{ display: "flex", gap: 0, marginBottom: 28, borderBottom: "2px solid #e0e0e0" }}>
-        {["calculator", "calendar"].map((t) => (
+      <div style={{ backgroundColor: C.white, borderBottom: `1px solid ${C.border}`, padding: "0 32px", display: "flex", gap: 0 }}>
+        {["calculator", "calendar", "filing-readiness"].map((t) => (
           <button key={t} onClick={() => setTool(t)} style={{
-            padding: "10px 24px", border: "none", cursor: "pointer",
-            backgroundColor: "transparent", fontSize: 14, fontWeight: 600,
-            color: tool === t ? "#006c49" : "#76777d",
-            borderBottom: tool === t ? "2px solid #006c49" : "2px solid transparent",
-            marginBottom: -2, transition: "all 0.2s",
+            padding: "14px 20px", border: "none", cursor: "pointer",
+            backgroundColor: "transparent", fontSize: 13, fontWeight: 600,
+            color: tool === t ? C.primary : C.textMuted,
+            borderBottom: tool === t ? `2px solid ${C.primary}` : "2px solid transparent",
+            marginBottom: -1, transition: "all 0.2s",
           }}>
-            {t === "calculator" ? "🧮 Tax Calculator" : "📅 Deadline Calendar"}
+            {t === "calculator" ? "🧮 Tax Calculator" : t === "calendar" ? "📅 Deadline Calendar" : "📊 Filing Readiness"}
           </button>
         ))}
       </div>
-
-      {tool === "calculator" ? <TaxCalculator /> : <CalendarView deadlines={deadlines} />}
+      <div style={{ flex: 1, overflowY: "auto" }}>
+        {tool === "calculator" ? (
+          <div style={{ padding: "24px 32px", maxWidth: 760, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text, margin: "0 0 4px" }}>Tax Calculator</h2>
+            <p style={{ color: C.textMuted, fontSize: 14, marginBottom: 24 }}>Compare Old vs New regime and find your best option.</p>
+            <TaxCalculator />
+          </div>
+        ) : tool === "calendar" ? (
+          <CalendarView deadlines={deadlines} />
+        ) : (
+          <FilingReadiness language="en" />
+        )}
+      </div>
     </div>
   );
 }
 
-// ── Main App ─────────────────────────────────────────────────────────────────
+// ── Main App ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
       text: "Hello! I'm IBM Tax Guide AI, powered by IBM Granite & Watson NLU.\n\nI can help you understand Indian tax laws, calculate deductions, and manage your tax documents.\n\nWhat can I help you with today?",
-      suggestions: ["What is 80C deduction limit?", "Old vs New tax regime?", "How to calculate HRA?"],
+      suggestions: ["What is 80C deduction limit?", "How does UPI work safely?", "How to identify online scams?", "50-30-20 budgeting rule?"],
     },
   ]);
   const [input, setInput] = useState("");
@@ -265,193 +302,295 @@ export default function App() {
     setLoading(false);
   };
 
+  const pageTitles = {
+    [TABS.CHAT]: "AI Tax Assistant",
+    [TABS.TOOLKIT]: "Tax Toolkit",
+    [TABS.FORMS]: "Smart Form Vault",
+    [TABS.DOCCHECK]: "Document Checker",
+  };
+
   const navItems = [
-  { tab: TABS.CHAT, icon: "💬", label: "AI Chat" },
-  { tab: TABS.TOOLKIT, icon: "🔧", label: "Toolkit" },
-  { tab: TABS.FORMS, icon: "🗄️", label: "Form Vault" },
-];
+    { tab: TABS.CHAT, icon: "🤖", label: "AI Assistant" },
+    { tab: TABS.TOOLKIT, icon: "🔧", label: "Toolkit" },
+    { tab: TABS.FORMS, icon: "🗄️", label: "Form Vault" },
+    { tab: TABS.DOCCHECK, icon: "✅", label: "Doc Checker" },
+  ];
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "'Inter', 'IBM Plex Sans', Arial, sans-serif", backgroundColor: "#f8f9ff", overflow: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", fontFamily: "'Inter', Arial, sans-serif", backgroundColor: C.bg }}>
 
-      {/* Sidebar */}
-      <nav style={{ width: 260, backgroundColor: "white", borderRight: "1px solid #e0e0e0", display: "flex", flexDirection: "column", flexShrink: 0, boxShadow: "2px 0 8px rgba(0,0,0,0.04)" }}>
-        <div style={{ padding: "24px 20px", borderBottom: "1px solid #e0e0e0" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: "#0f62fe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>💰</div>
-            <div>
-              <p style={{ margin: 0, fontWeight: 700, fontSize: 16, color: "#0b1c30" }}>IBM Tax Guide AI</p>
-              <p style={{ margin: 0, fontSize: 11, color: "#76777d" }}>IBM Cloud Powered</p>
-            </div>
+      {/* ── Top Nav Bar ── */}
+      <header style={{
+        backgroundColor: C.white, borderBottom: `1px solid ${C.border}`,
+        padding: "0 24px", height: 52, display: "flex",
+        alignItems: "center", justifyContent: "space-between",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.08)", flexShrink: 0, zIndex: 10,
+      }}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: 6,
+            backgroundColor: C.primary, display: "flex",
+            alignItems: "center", justifyContent: "center", fontSize: 16,
+          }}>💰</div>
+          <div>
+            <span style={{ fontWeight: 800, fontSize: 15, color: C.primary }}>TaxSmart</span>
+            <span style={{ fontWeight: 400, fontSize: 15, color: C.text }}> AI Portal</span>
           </div>
         </div>
 
-        <div style={{ padding: "16px 12px", flex: 1 }}>
+        {/* Nav Links */}
+        <nav style={{ display: "flex", gap: 4 }}>
           {navItems.map(({ tab, icon, label }) => (
             <button key={tab} onClick={() => setActiveTab(tab)} style={{
-              width: "100%", display: "flex", alignItems: "center", gap: 12,
-              padding: "12px 16px", borderRadius: 24, border: "none", cursor: "pointer",
-              marginBottom: 4, textAlign: "left",
-              backgroundColor: activeTab === tab ? "#6cf8bb" : "transparent",
-              color: activeTab === tab ? "#00714d" : "#45464d",
-              fontWeight: activeTab === tab ? 700 : 500, fontSize: 15, transition: "all 0.15s",
-              borderLeft: activeTab === tab ? "4px solid #006c49" : "4px solid transparent",
+              padding: "6px 14px", border: "none", cursor: "pointer",
+              backgroundColor: activeTab === tab ? C.primaryLight : "transparent",
+              color: activeTab === tab ? C.primary : C.textMuted,
+              fontWeight: activeTab === tab ? 700 : 500,
+              fontSize: 13, borderRadius: 6, transition: "all 0.15s",
+              borderBottom: activeTab === tab ? `2px solid ${C.primary}` : "2px solid transparent",
             }}>
-              <span style={{ fontSize: 18 }}>{icon}</span>{label}
+              {icon} {label}
             </button>
           ))}
-        </div>
+        </nav>
 
-        <div style={{ padding: "16px", borderTop: "1px solid #e0e0e0" }}>
-          <p style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 700, color: "#76777d", letterSpacing: "0.05em", textTransform: "uppercase" }}>IBM Services Active</p>
-          {["watsonx.ai Granite", "Watson NLU", "Cloud Object Storage", "Watson Assistant"].map((s) => (
-            <div key={s} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#24a148" }} />
-              <span style={{ fontSize: 12, color: "#45464d" }}>{s}</span>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ padding: "16px", borderTop: "1px solid #e0e0e0", display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", backgroundColor: "#dce9ff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, color: "#0043ce" }}>KS</div>
-          <div>
-            <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: "#0b1c30" }}>Kavya Sai</p>
-            <p style={{ margin: 0, fontSize: 11, color: "#76777d" }}>Tax Year 2024-25</p>
+        {/* Right controls */}
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {/* Search bar */}
+          <div style={{
+            display: "flex", alignItems: "center", gap: 6,
+            backgroundColor: C.bg, border: `1px solid ${C.border}`,
+            borderRadius: 20, padding: "5px 12px", width: 180,
+          }}>
+            <span style={{ fontSize: 12, color: C.textMuted }}>🔍</span>
+            <input placeholder="Search for tax forms..." style={{
+              border: "none", backgroundColor: "transparent",
+              fontSize: 12, outline: "none", color: C.text, width: "100%",
+            }} />
           </div>
-        </div>
-      </nav>
 
-      {/* Main Content */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-
-        {/* Top Bar */}
-        <div style={{ padding: "16px 32px", backgroundColor: "white", borderBottom: "1px solid #e0e0e0", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
-          <div>
-            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0b1c30" }}>
-            </h2>
-            <p style={{ margin: 0, fontSize: 13, color: "#45464d", display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "#24a148", display: "inline-block" }} />
-              Always online to help with your taxes
-            </p>
+          {/* Language */}
+          <div style={{ display: "flex", border: `1px solid ${C.border}`, borderRadius: 6, overflow: "hidden" }}>
+            {[{ val: "en", label: "EN" }, { val: "hi", label: "हि" }].map(({ val, label }) => (
+              <button key={val} onClick={() => setLanguage(val)} style={{
+                padding: "4px 10px", border: "none", cursor: "pointer",
+                backgroundColor: language === val ? C.primary : C.white,
+                color: language === val ? "white" : C.textMuted,
+                fontSize: 12, fontWeight: 600,
+              }}>{label}</button>
+            ))}
           </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <div style={{ display: "flex", gap: 0, border: "1px solid #c6c6cd", borderRadius: 8, overflow: "hidden" }}>
-              {[{ val: "en", label: "EN" }, { val: "hi", label: "हि" }].map(({ val, label }) => (
-                <button key={val} onClick={() => setLanguage(val)} style={{
-                  padding: "6px 14px", border: "none", cursor: "pointer",
-                  backgroundColor: language === val ? "#0f62fe" : "white",
-                  color: language === val ? "white" : "#45464d",
-                  fontSize: 13, fontWeight: 600, transition: "all 0.15s",
-                }}>{label}</button>
-              ))}
-            </div>
-            {activeTab === TABS.CHAT && (
-              <button onClick={() => setMessages([{ role: "assistant", text: "Chat cleared! How can I help you with your taxes?" }])} style={{
-                padding: "7px 16px", backgroundColor: "#0b1c30", color: "white",
-                border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: "pointer",
-              }}>CLEAR CHAT</button>
-            )}
-          </div>
+
+          {/* User avatar */}
+          <div style={{
+            width: 32, height: 32, borderRadius: "50%",
+            backgroundColor: C.secondary, display: "flex",
+            alignItems: "center", justifyContent: "center",
+            fontWeight: 700, fontSize: 12, color: "white", cursor: "pointer",
+          }}>KS</div>
         </div>
+      </header>
 
-        {/* Tab Content */}
-        {activeTab === TABS.CHAT ? (
-          <>
-            <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
-              {messages.map((msg, i) => (
-                <div key={i}>
-                  <div style={{
-                    display: "flex", gap: 12,
-                    flexDirection: msg.role === "user" ? "row-reverse" : "row",
-                    maxWidth: "72%", marginLeft: msg.role === "user" ? "auto" : 0,
-                  }}>
-                    <div style={{
-                      width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
-                      backgroundColor: msg.role === "user" ? "#dce9ff" : "#6cf8bb",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 18, border: "1px solid rgba(0,0,0,0.08)",
-                    }}>{msg.role === "user" ? "👤" : "🤖"}</div>
-                    <div style={{
-                      padding: "14px 18px",
-                      backgroundColor: msg.role === "user" ? "#0f62fe" : "white",
-                      color: msg.role === "user" ? "white" : "#0b1c30",
-                      borderRadius: msg.role === "user" ? "20px 20px 4px 20px" : "4px 20px 20px 20px",
-                      fontSize: 14, lineHeight: 1.6,
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                      border: msg.role === "assistant" ? "1px solid #e0e0e0" : "none",
-                      whiteSpace: "pre-wrap",
-                    }}>{msg.text}</div>
-                  </div>
-                  {msg.suggestions && (
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10, marginLeft: 50 }}>
-                      {msg.suggestions.map((s, j) => (
-                        <button key={j} onClick={() => sendMessage(s)} style={{
-                          padding: "6px 14px", backgroundColor: "#eff4ff",
-                          color: "#00714d", border: "1px solid #c6c6cd",
-                          borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: "pointer",
-                        }}>{s}</button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+      {/* ── Body ── */}
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-              {loading && (
-                <div style={{ display: "flex", gap: 12, maxWidth: "72%" }}>
-                  <div style={{ width: 38, height: 38, borderRadius: "50%", backgroundColor: "#6cf8bb", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🤖</div>
-                  <div style={{ padding: "14px 18px", backgroundColor: "white", borderRadius: "4px 20px 20px 20px", border: "1px solid #e0e0e0", fontSize: 14, color: "#76777d" }}>
-                    Analyzing with IBM Watson NLU + Granite...
-                  </div>
-                </div>
-              )}
+        {/* ── Left Sidebar ── */}
+        <aside style={{ width: 220, backgroundColor: C.white, borderRight: `1px solid ${C.border}`, display: "flex", flexDirection: "column", flexShrink: 0 }}>
 
-              {keywords.length > 0 && (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginLeft: 50 }}>
-                  <span style={{ fontSize: 12, color: "#45464d", fontWeight: 600 }}>🔍 NLU detected:</span>
-                  {keywords.map((kw, i) => (
-                    <span key={i} style={{ backgroundColor: "#defbe6", color: "#0e6027", padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>{kw}</span>
-                  ))}
-                </div>
-              )}
-              <div ref={bottomRef} />
+          {/* IBM Services */}
+          <div style={{ padding: "16px", borderTop: `1px solid ${C.border}` }}>
+            <p style={{ margin: "0 0 8px", fontSize: 10, fontWeight: 700, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.06em" }}>IBM Services</p>
+            {["watsonx.ai", "Watson NLU", "Cloud Storage", "WA"].map((s) => (
+              <div key={s} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#22c55e" }} />
+                <span style={{ fontSize: 11, color: C.textMuted }}>{s}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* User */}
+          <div style={{ padding: "12px 16px", borderTop: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 30, height: 30, borderRadius: "50%", backgroundColor: C.secondary, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "white", flexShrink: 0 }}>KS</div>
+            <div>
+              <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: C.text }}>Kavya Sai</p>
+              <p style={{ margin: 0, fontSize: 10, color: C.textMuted }}>FY 2024-25</p>
             </div>
+          </div>
+        </aside>
 
-            <div style={{ padding: "16px 32px", backgroundColor: "white", borderTop: "1px solid #e0e0e0", flexShrink: 0 }}>
-              <div style={{ maxWidth: 720, margin: "0 auto" }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "center", backgroundColor: "#f8f9ff", border: "1px solid #c6c6cd", borderRadius: 16, padding: "8px 8px 8px 16px" }}>
-                  <input
-                    style={{ flex: 1, border: "none", backgroundColor: "transparent", fontSize: 14, outline: "none", color: "#0b1c30" }}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    placeholder={language === "hi" ? "अपना कर प्रश्न पूछें..." : "Ask anything about your taxes..."}
-                    disabled={loading}
-                  />
-                  <button onClick={startListening} disabled={listening} style={{
-                    width: 36, height: 36, borderRadius: "50%", border: "none",
-                    backgroundColor: listening ? "#ff832b" : "#eff4ff",
-                    color: listening ? "white" : "#0043ce", cursor: "pointer", fontSize: 16,
-                  }}>{listening ? "🔴" : "🎤"}</button>
-                  <button onClick={() => sendMessage()} disabled={loading} style={{
-                    backgroundColor: "#006c49", color: "white", border: "none",
-                    borderRadius: 10, padding: "8px 20px", fontSize: 13,
-                    fontWeight: 700, cursor: "pointer", opacity: loading ? 0.6 : 1,
-                  }}>SEND ➤</button>
-                </div>
-                <p style={{ textAlign: "center", fontSize: 10, color: "#76777d", marginTop: 8, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                  AI can make mistakes. Verify important tax decisions with a professional.
+        {/* ── Main Content ── */}
+        <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
+          {/* Page Header Bar */}
+          <div style={{
+            backgroundColor: C.white, borderBottom: `1px solid ${C.border}`,
+            padding: "12px 32px", display: "flex",
+            justifyContent: "space-between", alignItems: "center", flexShrink: 0,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: "50%",
+                backgroundColor: C.primaryLight, display: "flex",
+                alignItems: "center", justifyContent: "center", fontSize: 18,
+              }}>
+                {navItems.find(n => n.tab === activeTab)?.icon}
+              </div>
+              <div>
+                <h2 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: C.text }}>{pageTitles[activeTab]}</h2>
+                <p style={{ margin: 0, fontSize: 11, color: "#22c55e", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#22c55e", display: "inline-block" }} />
+                  Active Specialist
                 </p>
               </div>
             </div>
-          </>
-        ) : activeTab === TABS.TOOLKIT ? (
-          <div style={{ flex: 1, overflowY: "auto" }}><Toolkit /></div>
-        ) : activeTab === TABS.VAULT ? (
-          <div style={{ flex: 1, overflowY: "auto" }}><FormVault /></div>
-        ) : (
-          <div style={{ flex: 1, overflowY: "auto" }}><FormVault /></div>
-        )}
+            {activeTab === TABS.CHAT && (
+              <button onClick={() => setMessages([{ role: "assistant", text: "Chat cleared! How can I help you with your taxes?" }])} style={{
+                padding: "6px 14px", backgroundColor: C.secondary, color: "white",
+                border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer",
+              }}>+ File New Return</button>
+            )}
+          </div>
+
+          {/* ── Tab Content ── */}
+          {activeTab === TABS.CHAT ? (
+            <>
+              {/* Messages */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "24px 32px", display: "flex", flexDirection: "column", gap: 20, backgroundColor: C.bg }}>
+                {messages.map((msg, i) => (
+                  <div key={i}>
+                    <div style={{
+                      display: "flex", gap: 12,
+                      flexDirection: msg.role === "user" ? "row-reverse" : "row",
+                      maxWidth: "75%", marginLeft: msg.role === "user" ? "auto" : 0,
+                    }}>
+                      {/* Avatar */}
+                      <div style={{
+                        width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                        backgroundColor: msg.role === "user" ? C.secondary : C.primary,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        color: "white", fontWeight: 700, fontSize: 13,
+                      }}>
+                        {msg.role === "user" ? "KS" : "AI"}
+                      </div>
+                      {/* Bubble */}
+                      <div style={{
+                        padding: "12px 16px",
+                        backgroundColor: msg.role === "user" ? C.secondary : C.white,
+                        color: msg.role === "user" ? "white" : C.text,
+                        borderRadius: msg.role === "user" ? "12px 12px 2px 12px" : "2px 12px 12px 12px",
+                        fontSize: 13, lineHeight: 1.6,
+                        boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                        border: msg.role === "assistant" ? `1px solid ${C.border}` : "none",
+                        whiteSpace: "pre-wrap", maxWidth: "100%",
+                      }}>{msg.text}</div>
+                    </div>
+
+                    {/* Suggestions */}
+                    {msg.suggestions && (
+                      <div style={{ marginTop: 10, marginLeft: 48 }}>
+                        <p style={{ margin: "0 0 6px", fontSize: 11, color: C.textMuted, fontWeight: 600 }}>Suggested Next Steps:</p>
+                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                          {msg.suggestions.map((s, j) => (
+                            <button key={j} onClick={() => sendMessage(s)} style={{
+                              padding: "5px 12px", backgroundColor: C.white,
+                              color: C.primary, border: `1px solid ${C.primary}`,
+                              borderRadius: 20, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                              transition: "all 0.15s",
+                            }}>{s}</button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* NLU Keywords */}
+                    {msg.role === "assistant" && i === messages.length - 1 && keywords.length > 0 && (
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 8, marginLeft: 48 }}>
+                        <span style={{ fontSize: 11, color: C.textMuted, fontWeight: 600 }}>🔍 NLU detected:</span>
+                        {keywords.map((kw, ki) => (
+                          <span key={ki} style={{
+                            backgroundColor: C.secondaryLight, color: C.secondary,
+                            padding: "2px 8px", borderRadius: 20, fontSize: 10, fontWeight: 600,
+                          }}>{kw}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {loading && (
+                  <div style={{ display: "flex", gap: 12, maxWidth: "75%" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", backgroundColor: C.primary, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>AI</div>
+                    <div style={{ padding: "12px 16px", backgroundColor: C.white, borderRadius: "2px 12px 12px 12px", border: `1px solid ${C.border}`, fontSize: 13, color: C.textMuted }}>
+                      Analyzing with IBM Watson NLU + Granite...
+                    </div>
+                  </div>
+                )}
+                <div ref={bottomRef} />
+              </div>
+
+              {/* Input Area */}
+              <div style={{ backgroundColor: C.white, borderTop: `1px solid ${C.border}`, padding: "16px 32px", flexShrink: 0 }}>
+                <div style={{ maxWidth: 760, margin: "0 auto" }}>
+                  <div style={{
+                    display: "flex", gap: 8, alignItems: "center",
+                    backgroundColor: C.bg, border: `1px solid ${C.border}`,
+                    borderRadius: 8, padding: "8px 8px 8px 16px",
+                  }}>
+                    <input
+                      style={{ flex: 1, border: "none", backgroundColor: "transparent", fontSize: 13, outline: "none", color: C.text }}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                      placeholder={language === "hi" ? "अपना कर प्रश्न पूछें..." : "Ask TaxSmart AI about your 2024 returns..."}
+                      disabled={loading}
+                    />
+                    {/* Attachment */}
+                    <button style={{ width: 32, height: 32, borderRadius: 6, border: `1px solid ${C.border}`, backgroundColor: C.white, cursor: "pointer", fontSize: 14, color: C.textMuted }}>📎</button>
+                    {/* Mic */}
+                    <button onClick={startListening} disabled={listening} style={{
+                      width: 32, height: 32, borderRadius: 6, border: `1px solid ${C.border}`,
+                      backgroundColor: listening ? C.error : C.white,
+                      color: listening ? "white" : C.textMuted, cursor: "pointer", fontSize: 14,
+                    }}>🎤</button>
+                    {/* Send */}
+                    <button onClick={() => sendMessage()} disabled={loading} style={{
+                      width: 36, height: 36, borderRadius: 6,
+                      backgroundColor: C.primary, color: "white",
+                      border: "none", cursor: "pointer", fontSize: 16,
+                      opacity: loading ? 0.6 : 1,
+                    }}>➤</button>
+                  </div>
+                  <p style={{ textAlign: "center", fontSize: 10, color: C.textMuted, marginTop: 6 }}>
+                    TaxSmart AI is for guidance only. Please consult a professional for complex legal tax advice.
+                  </p>
+                </div>
+              </div>
+            </>
+          ) : activeTab === TABS.TOOLKIT ? (
+            <Toolkit />
+          )  : activeTab === TABS.FORMS ? (
+  <div style={{ flex: 1, overflowY: "auto" }}><FormVault language={language} /></div>
+          ) : (
+            <div style={{ flex: 1, overflowY: "auto" }}><DocChecker language={language} /></div>
+          )}
+        </main>
       </div>
+
+      {/* ── Footer ── */}
+      <footer style={{
+        backgroundColor: C.white, borderTop: `1px solid ${C.border}`,
+        padding: "8px 24px", display: "flex",
+        justifyContent: "space-between", alignItems: "center",
+        flexShrink: 0,
+      }}>
+        <span style={{ fontSize: 11, color: C.textMuted }}>© 2026 TaxSmart AI. Powered by IBM Cloud.</span>
+        <div style={{ display: "flex", gap: 16 }}>
+          {["Privacy Policy", "Terms of Service", "Accessibility", "Contact Us"].map(l => (
+            <span key={l} style={{ fontSize: 11, color: C.textMuted, cursor: "pointer" }}>{l}</span>
+          ))}
+        </div>
+      </footer>
     </div>
   );
 }
