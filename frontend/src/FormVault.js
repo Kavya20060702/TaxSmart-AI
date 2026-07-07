@@ -68,8 +68,8 @@ const TAX_FORMS = [
     icon: "📝",
   },
 ];
-
-export default function FormVault({ language = "en" }) {
+export default function FormVault({ language = "en", onDocumentUploaded }) {
+  const [autoCheckedNotice, setAutoCheckedNotice] = useState(null);
   const [selectedForm, setSelectedForm] = useState(null);
   const [guideLoading, setGuideLoading] = useState(false);
   const [guide, setGuide] = useState(null);
@@ -90,6 +90,7 @@ export default function FormVault({ language = "en" }) {
 
   const fileRef = useRef();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchDocs(); }, []);
 
   const fetchDocs = async () => {
@@ -134,10 +135,17 @@ export default function FormVault({ language = "en" }) {
         });
         const data = await res.json();
         if (data.status === "success") {
-          // Show auto scan result if available
           if (data.scan_summary) {
             setScanningFile(data.original_name);
             setScanResult(data.scan_summary);
+          }
+          // Auto-check in Doc Checker!
+          if (onDocumentUploaded) {
+            const matched = onDocumentUploaded(data.original_name);
+            if (matched && matched.length > 0) {
+              setAutoCheckedNotice(`✅ Auto-checked in Doc Checker: ${matched.join(', ')}`);
+              setTimeout(() => setAutoCheckedNotice(null), 4000);
+            }
           }
         } else {
           alert(`Failed to upload ${file.name}`);
@@ -231,7 +239,19 @@ export default function FormVault({ language = "en" }) {
           }}>{s}</span>
         ))}
       </div>
-
+        {autoCheckedNotice && (
+  <div style={{
+    backgroundColor: "#f0f4f0", border: "1px solid #2F4F4F",
+    borderRadius: 8, padding: "10px 16px", marginBottom: 16,
+    display: "flex", alignItems: "center", gap: 8,
+    animation: "fadeIn 0.3s ease",
+  }}>
+    <span style={{ fontSize: 16 }}>🔗</span>
+    <span style={{ fontSize: 13, color: "#2F4F4F", fontWeight: 600 }}>
+      {autoCheckedNotice}
+    </span>
+  </div>
+)}
       {/* Section Tabs */}
       <div style={{ display: "flex", borderBottom: "2px solid #e0e0e0", marginBottom: 28 }}>
         {[

@@ -101,8 +101,9 @@ const DOCUMENTS = [
 
 const CATEGORIES = ["Identity", "Salary", "Tax", "Banking", "Deductions", "Investments", "Reference"];
 
-export default function DocChecker({ language }) {
-  const [checked, setChecked] = useState({});
+export default function DocChecker({ language, checkedDocs = {}, setCheckedDocs }) {
+  const checked = checkedDocs;
+  const setChecked = setCheckedDocs;
   const [employment_type, setEmploymentType] = useState("Salaried");
   const [regime, setRegime] = useState("New Regime");
   const [loading, setLoading] = useState(false);

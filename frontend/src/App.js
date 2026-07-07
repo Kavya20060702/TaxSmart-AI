@@ -257,7 +257,30 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(TABS.CHAT);
   const [listening, setListening] = useState(false);
   const [language, setLanguage] = useState("en");
+  const [checkedDocs, setCheckedDocs] = useState({});
   const bottomRef = useRef(null);
+
+  const autoCheckDoc = (filename) => {
+    const n = filename.toLowerCase();
+    const updates = {};
+    if (n.includes('form16') || n.includes('form_16') || n.includes('f16')) updates.form16 = true;
+    if (n.includes('26as') || n.includes('form26')) updates.form26as = true;
+    if (n.includes('pan')) updates.pan = true;
+    if (n.includes('aadhaar') || n.includes('aadhar')) updates.aadhaar = true;
+    if (n.includes('80c') || n.includes('investment') || n.includes('elss') || n.includes('ppf')) updates.inv_80c = true;
+    if (n.includes('80d') || n.includes('health') || n.includes('insurance')) updates.ins_80d = true;
+    if (n.includes('homeloan') || n.includes('home_loan') || n.includes('mortgage')) updates.homeloan = true;
+    if (n.includes('hra') || n.includes('rent')) updates.hra = true;
+    if (n.includes('bank') || n.includes('statement')) updates.bank = true;
+    if (n.includes('26as') || n.includes('ais') || n.includes('tis')) updates.ais = true;
+    if (n.includes('itr') || n.includes('return')) updates.prev_itr = true;
+    if (n.includes('capital') || n.includes('gains') || n.includes('demat')) updates.cap_gains = true;
+    if (Object.keys(updates).length > 0) {
+      setCheckedDocs(prev => ({ ...prev, ...updates }));
+      return Object.keys(updates);
+    }
+    return [];
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -585,13 +608,17 @@ export default function App() {
             </>
           ) : activeTab === TABS.TOOLKIT ? (
             <Toolkit />
-          )  : activeTab === TABS.FORMS ? (
-  <div style={{ flex: 1, overflowY: "auto" }}><FormVault language={language} /></div>
+          ) : activeTab === TABS.FORMS ? (
+            <div style={{ flex: 1, overflowY: "auto" }}>
+              <FormVault language={language} onDocumentUploaded={autoCheckDoc} />
+            </div>
           ) : (
-            <div style={{ flex: 1, overflowY: "auto" }}><DocChecker language={language} /></div>
+            <div style={{ flex: 1, overflowY: "auto" }}>
+              <DocChecker language={language} checkedDocs={checkedDocs} setCheckedDocs={setCheckedDocs} />
+            </div>
           )}
         </main>
-      </div>
+      </div>  
 
       {/* ── Footer ── */}
       <footer style={{
