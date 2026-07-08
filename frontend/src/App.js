@@ -584,8 +584,6 @@ export default function App() {
                       placeholder={language === "hi" ? "अपना कर प्रश्न पूछें..." : "Ask TaxSmart AI about your 2024 returns..."}
                       disabled={loading}
                     />
-                    {/* Attachment */}
-                    <button style={{ width: 32, height: 32, borderRadius: 6, border: `1px solid ${C.border}`, backgroundColor: C.white, cursor: "pointer", fontSize: 14, color: C.textMuted }}>📎</button>
                     {/* Mic */}
                     <button onClick={startListening} disabled={listening} style={{
                       width: 32, height: 32, borderRadius: 6, border: `1px solid ${C.border}`,
