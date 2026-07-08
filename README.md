@@ -145,6 +145,8 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 ---
 ## 🎥 Demo
 
+https://github.com/user-attachments/assets/f63c2a2f-60c5-4469-b753-9652f879395b
+
 **Features to demonstrate:**
 1. Ask a tax question → see Citation-Based RAG sources
 2. Switch to Hindi → ask in Hindi → get Hindi response
@@ -252,7 +254,7 @@ npm start
 
 ## 👩‍💻 Author
 
-**Kavya Sai**
+**P. Kavya Sai**
 B.Tech CSE (NLP Specialization) — KL University, Hyderabad
 LeetCode: 1759 | CodeChef: 1132
 IBM SkillsBuild Virtual Internship — AICTE 2026
