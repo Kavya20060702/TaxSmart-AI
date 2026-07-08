@@ -39,34 +39,8 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 
 ## ☁️ IBM Cloud Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      React Frontend                          │
-│   AI Chat │ Toolkit │ Form Vault │ Doc Checker               │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ REST API
-┌─────────────────────────▼───────────────────────────────────┐
-│                   Flask Backend (Python)                      │
-│                                                              │
-│  ┌──────────────┐  ┌─────────────┐  ┌──────────────────┐   │
-│  │  Watson NLU  │  │  ChromaDB   │  │    PyMuPDF       │   │
-│  │  Keywords    │  │  RAG Search │  │   PDF Parser     │   │
-│  └──────┬───────┘  └──────┬──────┘  └────────┬─────────┘   │
-│         └─────────────────▼──────────────────┘              │
-│                   ┌──────────────┐                           │
-│                   │ watsonx.ai   │                           │
-│                   │ Foundation   │                           │
-│                   │   Models     │                           │
-│                   └──────────────┘                           │
-│                   ┌──────────────┐                           │
-│                   │  IBM Cloud   │                           │
-│                   │  Object      │                           │
-│                   │  Storage     │                           │
-│                   └──────────────┘                           │
-└──────────────────────────────────────────────────────────────┘
-```
+<img width="1211" height="864" alt="Image" src="https://github.com/user-attachments/assets/b94111b3-127a-4be5-8f24-a5b85c8bfd38" />
 
----
 
 ## ☁️ IBM Services Used (5 Active Services)
 
