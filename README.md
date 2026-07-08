@@ -39,7 +39,7 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 
 ## ☁️ IBM Cloud Architecture
 
-<img width="1211" height="864" alt="Image" src="https://github.com/user-attachments/assets/b94111b3-127a-4be5-8f24-a5b85c8bfd38" />
+<img width="1580" height="902" alt="Image" src="https://github.com/user-attachments/assets/f5fe65af-d459-4ad4-a975-88fa9f1f58fc" />
 
 
 ## ☁️ IBM Services Used (5 Active Services)
@@ -145,7 +145,7 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 ---
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/f63c2a2f-60c5-4469-b753-9652f879395b
+[https://github.com/user-attachments/assets/f63c2a2f-60c5-4469-b753-9652f879395b](https://github.com/user-attachments/assets/b65ebe8c-b989-42b0-81eb-6ca9b9f60e58)
 
 **Features to demonstrate:**
 1. Ask a tax question → see Citation-Based RAG sources
