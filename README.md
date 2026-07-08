@@ -169,6 +169,18 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 | Voice | Browser Web Speech API |
 
 ---
+## 🎥 Demo
+
+**Features to demonstrate:**
+1. Ask a tax question → see Citation-Based RAG sources
+2. Switch to Hindi → ask in Hindi → get Hindi response
+3. Use voice input
+4. Tax Calculator → Old vs New regime comparison
+5. Filing Readiness → 3-step wizard → score + action plan
+6. Upload Form 16 PDF → auto-scan + auto-check in Doc Checker
+7. Doc Checker → see Form 16 already ticked → check remaining → get completeness score
+
+---
 
 ## 📁 Project Structure
 
@@ -261,19 +273,6 @@ npm install
 npm start
 # → Running on http://localhost:3000
 ```
-
----
-
-## 🎥 Demo
-
-**Features to demonstrate:**
-1. Ask a tax question → see Citation-Based RAG sources
-2. Switch to Hindi → ask in Hindi → get Hindi response
-3. Use voice input
-4. Tax Calculator → Old vs New regime comparison
-5. Filing Readiness → 3-step wizard → score + action plan
-6. Upload Form 16 PDF → auto-scan + auto-check in Doc Checker
-7. Doc Checker → see Form 16 already ticked → check remaining → get completeness score
 
 ---
 
