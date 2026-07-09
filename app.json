@@ -1,0 +1,65 @@
+{
+  "name": "TaxSmart AI",
+  "description": "An AI-powered Indian Tax and Financial Literacy Assistant built on IBM Cloud. RAG-based agent helping users with income tax, UPI, scam awareness, and personal finance management.",
+  "problem_statement": "Problem Statement No. 7 — AI Agent for Digital Financial Literacy",
+  "internship": "IBM SkillsBuild University Engagements — AICTE 2026",
+  "author": {
+    "name": "Kavya Sai",
+    "university": "KL University, Hyderabad",
+    "branch": "B.Tech CSE (AI/ML Specialization)",
+    "github": "Kavya20060702",
+    "linkedin": "p-kavya-sai-6951a1367"
+  },
+  "ibm_services": [
+    "watsonx.ai (Foundation Models)",
+    "Watson Machine Learning",
+    "Watson Natural Language Understanding",
+    "Watson Assistant",
+    "IBM Cloud Object Storage"
+  ],
+  "tech_stack": {
+    "frontend": "React 18",
+    "backend": "Python 3.13, Flask",
+    "llm": "mistralai/mistral-small-3-1-24b-instruct-2503 via watsonx.ai",
+    "rag": "ChromaDB + sentence-transformers",
+    "storage": "IBM Cloud Object Storage",
+    "nlp": "IBM Watson NLU"
+  },
+  "features": [
+    "Citation-Based RAG Chat",
+    "Voice Input (English + Hindi)",
+    "Bilingual Support (EN/HI)",
+    "Tax Calculator (Old vs New Regime)",
+    "Deadline Calendar",
+    "Filing Readiness Meter",
+    "Smart Form Vault with AI Guide",
+    "AI Document Scanner",
+    "AI Document Completeness Checker",
+    "Auto Document Detection"
+  ],
+  "knowledge_base_topics": [
+    "Section 80C, 80D, 80CCD",
+    "Old vs New Tax Regime",
+    "HRA Calculation",
+    "Capital Gains Tax",
+    "TDS and Form 16",
+    "Income Tax Slabs FY 2024-25",
+    "UPI Payments Guide",
+    "Online Scam Awareness",
+    "50-30-20 Budgeting Rule",
+    "Interest Rates in India",
+    "Digital Banking Safety"
+  ],
+  "api_endpoints": [
+    "POST /chat",
+    "POST /upload",
+    "GET /documents",
+    "DELETE /documents/<key>",
+    "POST /scan",
+    "POST /filing-readiness",
+    "POST /doc-checker",
+    "GET /health"
+  ],
+  "version": "1.0.0",
+  "year": "2026"
+}

@@ -39,34 +39,8 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 
 ## ☁️ IBM Cloud Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      React Frontend                          │
-│   AI Chat │ Toolkit │ Form Vault │ Doc Checker               │
-└─────────────────────────┬───────────────────────────────────┘
-                          │ REST API
-┌─────────────────────────▼───────────────────────────────────┐
-│                   Flask Backend (Python)                      │
-│                                                              │
-│  ┌──────────────┐  ┌─────────────┐  ┌──────────────────┐   │
-│  │  Watson NLU  │  │  ChromaDB   │  │    PyMuPDF       │   │
-│  │  Keywords    │  │  RAG Search │  │   PDF Parser     │   │
-│  └──────┬───────┘  └──────┬──────┘  └────────┬─────────┘   │
-│         └─────────────────▼──────────────────┘              │
-│                   ┌──────────────┐                           │
-│                   │ watsonx.ai   │                           │
-│                   │ Foundation   │                           │
-│                   │   Models     │                           │
-│                   └──────────────┘                           │
-│                   ┌──────────────┐                           │
-│                   │  IBM Cloud   │                           │
-│                   │  Object      │                           │
-│                   │  Storage     │                           │
-│                   └──────────────┘                           │
-└──────────────────────────────────────────────────────────────┘
-```
+<img width="1580" height="902" alt="Image" src="https://github.com/user-attachments/assets/f5fe65af-d459-4ad4-a975-88fa9f1f58fc" />
 
----
 
 ## ☁️ IBM Services Used (5 Active Services)
 
@@ -169,6 +143,20 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 | Voice | Browser Web Speech API |
 
 ---
+## 🎥 Demo
+
+[https://github.com/user-attachments/assets/f63c2a2f-60c5-4469-b753-9652f879395b](https://github.com/user-attachments/assets/b65ebe8c-b989-42b0-81eb-6ca9b9f60e58)
+
+**Features to demonstrate:**
+1. Ask a tax question → see Citation-Based RAG sources
+2. Switch to Hindi → ask in Hindi → get Hindi response
+3. Use voice input
+4. Tax Calculator → Old vs New regime comparison
+5. Filing Readiness → 3-step wizard → score + action plan
+6. Upload Form 16 PDF → auto-scan + auto-check in Doc Checker
+7. Doc Checker → see Form 16 already ticked → check remaining → get completeness score
+
+---
 
 ## 📁 Project Structure
 
@@ -264,22 +252,9 @@ npm start
 
 ---
 
-## 🎥 Demo
-
-**Features to demonstrate:**
-1. Ask a tax question → see Citation-Based RAG sources
-2. Switch to Hindi → ask in Hindi → get Hindi response
-3. Use voice input
-4. Tax Calculator → Old vs New regime comparison
-5. Filing Readiness → 3-step wizard → score + action plan
-6. Upload Form 16 PDF → auto-scan + auto-check in Doc Checker
-7. Doc Checker → see Form 16 already ticked → check remaining → get completeness score
-
----
-
 ## 👩‍💻 Author
 
-**Kavya Sai**
+**P. Kavya Sai**
 B.Tech CSE (NLP Specialization) — KL University, Hyderabad
 LeetCode: 1759 | CodeChef: 1132
 IBM SkillsBuild Virtual Internship — AICTE 2026
