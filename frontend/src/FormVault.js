@@ -95,7 +95,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
 
   const fetchDocs = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:5000/documents");
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/documents`);
       const data = await res.json();
       if (data.status === "success") setUploadedDocs(data.files);
     } catch (e) { console.log("Could not fetch docs"); }
@@ -106,7 +106,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
     setGuide(null);
     setGuideLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:5000/chat", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -129,7 +129,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
       try {
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch("http://127.0.0.1:5000/upload", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/upload`, {
           method: "POST",
           body: formData,
         });
@@ -163,7 +163,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
     setScanResult(null);
     setCheckResult(null);
     try {
-      const res = await fetch("http://127.0.0.1:5000/scan", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/scan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
     setCheckResult(null);
     setScanResult(null);
     try {
-      const res = await fetch("http://127.0.0.1:5000/scan", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/scan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -203,7 +203,7 @@ export default function FormVault({ language = "en", onDocumentUploaded }) {
   const deleteDoc = async (key, name) => {
     if (!window.confirm(`Delete ${name}?`)) return;
     try {
-      await fetch(`http://127.0.0.1:5000/documents/${key}`, { method: "DELETE" });
+      await fetch(`${process.env.REACT_APP_API_URL}/documents/${key}`, { method: "DELETE" });
       fetchDocs();
       if (scanningFile === name) { setScanResult(null); }
       if (checkingFile === name) { setCheckResult(null); }

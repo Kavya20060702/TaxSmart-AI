@@ -239,6 +239,7 @@ COS_BUCKET=taxsmart-documents
 ```bash
 python app.py
 # → All systems ready! Running on http://127.0.0.1:5000
+#after deployment `${process.env.REACT_APP_API_URL}
 ```
 
 ### Frontend
