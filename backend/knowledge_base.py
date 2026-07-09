@@ -86,7 +86,7 @@ TAX_DOCUMENTS = [
 
 # ---- Setup ChromaDB ----
 def setup_knowledge_base():
-    chroma_client = chromadb.Client()
+    chroma_client = chromadb.PersistentClient(path="./chroma_db")
     
     # Delete collection if exists to avoid duplicates
     try:

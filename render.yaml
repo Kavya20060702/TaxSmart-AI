@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: taxsmart-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && python app.py
+    envVars:
+      - key: IBM_API_KEY
+        sync: false
+      - key: IBM_PROJECT_ID
+        sync: false
+      - key: IBM_URL
+        sync: false
+      - key: NLU_API_KEY
+        sync: false
+      - key: NLU_URL
+        sync: false
+      - key: COS_API_KEY
+        sync: false
+      - key: COS_INSTANCE_ID
+        sync: false
+      - key: COS_ENDPOINT
+        sync: false
+      - key: COS_BUCKET
+        sync: false
