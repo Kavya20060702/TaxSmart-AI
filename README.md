@@ -33,7 +33,7 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 | Online scam awareness | Dedicated KB doc — KYC fraud, phishing, how to report |
 | Personal finance | 50-30-20 budgeting, interest rates, emergency fund guidance |
 | Multilingual support | Full Hindi/English toggle — Granite responds in selected language |
-| IBM Cloud services | 5 IBM services actively integrated |
+| IBM Cloud services | 6 IBM services actively integrated |
 
 ---
 
@@ -51,6 +51,7 @@ Built entirely on **IBM Cloud Lite (Free) services**, the project demonstrates h
 | 3 | **Watson Natural Language Understanding** | Keyword extraction from user queries to enhance RAG retrieval accuracy |
 | 4 | **Watson Assistant** | Conversational AI service — integrated and active |
 | 5 | **IBM Cloud Object Storage** | Secure cloud storage for all uploaded tax documents |
+| 6 | **IBM Bob** | Used during development as the AI coding assistant. Provides intelligent code completions, suggestions and debugging help|
 
 ---
 
@@ -261,7 +262,6 @@ npm start
 
 **P. Kavya Sai**
 B.Tech CSE (NLP Specialization) — KL University, Hyderabad
-LeetCode: 1759 | CodeChef: 1132
 IBM SkillsBuild Virtual Internship — AICTE 2026
 
 ---
