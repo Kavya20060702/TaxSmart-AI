@@ -14,7 +14,7 @@
 </div>
 
 ---
-
+DEPLOYED LINK FOR YOUR EXPERIENCE: https://tax-smart-ai.vercel.app/
 ## 📌 Overview
 
 **TaxSmart AI** is a full-stack, RAG-powered AI agent that helps Indian citizens navigate income tax, UPI payments, online scam awareness, and personal finance management — all in one platform, available in English and Hindi.
@@ -177,6 +177,10 @@ taxsmart-ai/
 ```
 
 ---
+## 📁 LangFlow Architecture
+Since TaxSmart AI uses a custom RAG pipeline rather than Langflow directly, the equivalent Langflow components that map to our architecture
+
+<img width="1798" height="875" alt="Image" src="https://github.com/user-attachments/assets/ba95a215-03e8-439c-b0ad-279c61447cf0" />
 
 ## 🔌 API Endpoints
 
